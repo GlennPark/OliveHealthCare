@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
 
 CONFIG += c++17
 
@@ -9,14 +9,45 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    chattingclient.cpp \
+    chattingserver.cpp \
+    customerlist.cpp \
+    customermanage.cpp \
+    customersearch.cpp \
+    logthread.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    merchandiselist.cpp \
+    merchandisemanage.cpp \
+    merchandisesearch.cpp \
+    purchaselist.cpp \
+    purchasemanage.cpp \
+    purchasesearch.cpp
 
 HEADERS += \
-    mainwindow.h
+    chattingclient.h \
+    chattingserver.h \
+    customerlist.h \
+    customermanage.h \
+    customersearch.h \
+    logthread.h \
+    mainwindow.h \
+    merchandiselist.h \
+    merchandisemanage.h \
+    merchandisesearch.h \
+    purchaselist.h \
+    purchasemanage.h \
+    purchasesearch.h
 
 FORMS += \
-    mainwindow.ui
+    chattingserver.ui \
+    customermanage.ui \
+    customersearch.ui \
+    mainwindow.ui \
+    merchandisemanage.ui \
+    merchandisesearch.ui \
+    purchasemanage.ui \
+    purchasesearch.ui
 
 TRANSLATIONS += \
     OHCApp_ko_KR.ts
@@ -27,3 +58,6 @@ CONFIG += embed_translations
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resources.qrc

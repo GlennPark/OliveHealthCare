@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>searchTreeWidget</class>
+ <widget class="QTreeWidget" name="searchTreeWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>530</width>
+    <height>263</height>
+   </rect>
+  </property>
+  <property name="rootIsDecorated">
+   <bool>false</bool>
+  </property>
+  <column>
+   <property name="text">
+    <string>ID</string>
+   </property>
+  </column>
+  <column>
+   <property name="text">
+    <string>Name</string>
+   </property>
+  </column>
+  <column>
+   <property name="text">
+    <string>Price</string>
+   </property>
+  </column>
+  <column>
+   <property name="text">
+    <string>Quantity</string>
+   </property>
+  </column>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

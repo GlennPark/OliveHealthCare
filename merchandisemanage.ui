@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MerchandiseManage</class>
+ <widget class="QWidget" name="MerchandiseManage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MerchandiseManage</string>
+  </property>
+  <layout class="QVBoxLayout" name="productVerticalLayout">
+   <item>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <layout class="QVBoxLayout" name="listVerticalLayout">
+       <item>
+        <widget class="QTreeWidget" name="treeWidget">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <column>
+          <property name="text">
+           <string>ID</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Name</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Price</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Quantity</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QToolBox" name="toolBox">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="inputPage">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>353</width>
+         <height>508</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>&amp;Input</string>
+       </attribute>
+       <widget class="QTabWidget" name="favoriteTabWidget">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>138</y>
+          <width>189</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="medicalTab">
+         <attribute name="title">
+          <string>Medical</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="healthTab">
+         <attribute name="title">
+          <string>Health</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="dietTab">
+         <attribute name="title">
+          <string>Diet</string>
+         </attribute>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="">
+        <layout class="QHBoxLayout" name="addHorizontalLayout">
+         <item>
+          <widget class="QPushButton" name="addPushButton">
+           <property name="text">
+            <string>&amp;Add</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="modifyPushButton">
+           <property name="text">
+            <string>&amp;Modify</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QLineEdit" name="nameLineEdit">
+        <property name="geometry">
+         <rect>
+          <x>72</x>
+          <y>44</y>
+          <width>125</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="quantitySpinBox">
+        <property name="geometry">
+         <rect>
+          <x>72</x>
+          <y>106</y>
+          <width>92</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="maximum">
+         <number>999999999</number>
+        </property>
+       </widget>
+       <widget class="QLabel" name="nameLabel">
+        <property name="geometry">
+         <rect>
+          <x>29</x>
+          <y>44</y>
+          <width>35</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>&amp;Name</string>
+        </property>
+        <property name="buddy">
+         <cstring>nameLineEdit</cstring>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="idLineEdit">
+        <property name="geometry">
+         <rect>
+          <x>72</x>
+          <y>13</y>
+          <width>125</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="quantityLabel">
+        <property name="geometry">
+         <rect>
+          <x>13</x>
+          <y>106</y>
+          <width>51</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>&amp;Quantity</string>
+        </property>
+        <property name="buddy">
+         <cstring>quantitySpinBox</cstring>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="priceLineEdit">
+        <property name="geometry">
+         <rect>
+          <x>72</x>
+          <y>75</y>
+          <width>125</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="idLabel">
+        <property name="geometry">
+         <rect>
+          <x>51</x>
+          <y>13</y>
+          <width>16</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>I&amp;D</string>
+        </property>
+        <property name="buddy">
+         <cstring>idLineEdit</cstring>
+        </property>
+       </widget>
+       <widget class="QLabel" name="priceLabel">
+        <property name="geometry">
+         <rect>
+          <x>33</x>
+          <y>75</y>
+          <width>31</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>&amp;Price</string>
+        </property>
+        <property name="buddy">
+         <cstring>priceLineEdit</cstring>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="searchPage">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>353</width>
+         <height>508</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>&amp;Search</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="searchVerticalLayout">
+        <item>
+         <widget class="QTreeWidget" name="searchTreeWidget">
+          <property name="rootIsDecorated">
+           <bool>false</bool>
+          </property>
+          <column>
+           <property name="text">
+            <string>ID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Price</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Quantity</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QComboBox" name="searchComboBox">
+            <item>
+             <property name="text">
+              <string>ID</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Name</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Price</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Quantity</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="searchLineEdit"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="searchPushButton">
+          <property name="text">
+           <string>S&amp;earch</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
