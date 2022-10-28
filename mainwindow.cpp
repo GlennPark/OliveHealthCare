@@ -64,8 +64,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(customerManage, SIGNAL(destroyed()),customerManage, SLOT(deleteLater()));
     connect(customerManage, SIGNAL(addedCustomer(int, QString)),purchaseManage, SLOT(addCustomer(int, QString)));
-    connect(customerManage, SIGNAL(sendCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString)),purchaseManage,SLOT(getClientInfo(QString,QString,QString)));
-    connect(customerManage, SIGNAL(addedCustomer(int, QString)),chattingServer,SLOT(addCustomer(int, QString)));
+    connect(customerManage, SIGNAL(sendCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString)),purchaseManage,SLOT(getCustomerInfo(QString,QString,QString)));
+    connect(customerManage, SIGNAL(addedCustomer(int, QString)),chattingServer,SLOT(addClient(int, QString)));
 
     connect(merchandiseManage, SIGNAL(destroyed()),merchandiseManage, SLOT(deleteLater()));
     connect(merchandiseManage, SIGNAL(addedMerchandise(int, QString)),purchaseManage, SLOT(addMerchandise(int, QString)));
