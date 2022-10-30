@@ -171,7 +171,7 @@ void CustomerManage::on_modifyPushButton_clicked()
         customerList[key] = c;
     }
 }
-
+//고객 등록
 void CustomerManage::on_addPushButton_clicked()
 {
     QString name, number, email, domain, address, favorite, age, gender;
@@ -193,9 +193,10 @@ void CustomerManage::on_addPushButton_clicked()
     {
         gender = ui->femaleButton->text();
     }
-//qDebug()<< ui->femaleButton->text() << ui->maleButton->text() <<ui->maleButton->isCheckable();
+
     if(name.length()) {
-        CustomerList* c = new CustomerList(Cid, name, number, email, domain, address, favorite, age, gender);
+        CustomerList* c = new CustomerList(Cid, name, number, email, domain,
+                                           address, favorite, age, gender);
         customerList.insert(Cid, c);
         ui->treeWidget->addTopLevelItem(c);
         emit addedCustomer(Cid, name);
