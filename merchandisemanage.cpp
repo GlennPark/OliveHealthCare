@@ -12,7 +12,7 @@ MerchandiseManage::MerchandiseManage(QWidget* parent)
 
     QList<int> size;
     size << 600 << 600;
-    ui->splitter->setSizes(size);
+//    ui->splitter->setSizes(size);
 
     QAction* removeAction = new QAction(tr("&Remove"));
     connect(removeAction, SIGNAL(triggered()), SLOT(removeItem()));
@@ -155,7 +155,7 @@ void MerchandiseManage::on_treeWidget_itemClicked(QTreeWidgetItem* item, int col
     ui->nameLineEdit->setText(item->text(1));
     ui->priceLineEdit->setText(item->text(2));
     ui->quantitySpinBox->setValue(item->text(3).toInt());
-    ui->toolBox->setCurrentIndex(0);
+//    ui->toolBox->setCurrentIndex(0);
 }
 
 void MerchandiseManage::acceptMerchandiseInfo(int key)

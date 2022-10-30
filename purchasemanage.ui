@@ -6,423 +6,443 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1000</width>
+    <height>1000</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Order Info</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <item>
-    <widget class="QSplitter" name="splitter">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+  <widget class="QToolBox" name="toolBox">
+   <property name="geometry">
+    <rect>
+     <x>68</x>
+     <y>12</y>
+     <width>401</width>
+     <height>491</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="PurchaseEnroll">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>401</width>
+      <height>423</height>
+     </rect>
+    </property>
+    <attribute name="label">
+     <string>&amp;PurchaseEnroll</string>
+    </attribute>
+    <widget class="QTreeWidget" name="customerTreeWidget">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>210</y>
+       <width>387</width>
+       <height>112</height>
+      </rect>
      </property>
-     <widget class="QWidget" name="layoutWidget">
-      <layout class="QVBoxLayout" name="listVerticalLayout">
-       <item>
-        <widget class="QTreeWidget" name="treeWidget">
-         <property name="rootIsDecorated">
-          <bool>false</bool>
-         </property>
-         <column>
-          <property name="text">
-           <string>Order Number</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Client Name</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Product Name</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string># Price</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Quantity</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Total Price</string>
-          </property>
-         </column>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QToolBox" name="toolBox">
-      <property name="currentIndex">
-       <number>0</number>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <column>
+      <property name="text">
+       <string>Name</string>
       </property>
-      <widget class="QWidget" name="inputPage">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>411</width>
-         <height>508</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>&amp;Input</string>
-       </attribute>
-       <widget class="QTreeWidget" name="customerTreeWidget">
-        <property name="geometry">
-         <rect>
-          <x>12</x>
-          <y>210</y>
-          <width>387</width>
-          <height>112</height>
-         </rect>
-        </property>
-        <property name="rootIsDecorated">
-         <bool>false</bool>
-        </property>
-        <column>
-         <property name="text">
-          <string>Name</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Phone Number</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Address</string>
-         </property>
-        </column>
-       </widget>
-       <widget class="QTreeWidget" name="merchandiseTreeWidget">
-        <property name="geometry">
-         <rect>
-          <x>12</x>
-          <y>332</y>
-          <width>387</width>
-          <height>112</height>
-         </rect>
-        </property>
-        <property name="rootIsDecorated">
-         <bool>false</bool>
-        </property>
-        <column>
-         <property name="text">
-          <string>Name</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Price</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Quantity</string>
-         </property>
-        </column>
-       </widget>
-       <widget class="QWidget" name="">
-        <layout class="QHBoxLayout" name="addHorizontalLayout">
-         <item>
-          <widget class="QPushButton" name="addPushButton">
-           <property name="text">
-            <string>&amp;Add</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="modifyPushButton">
-           <property name="text">
-            <string>&amp;Modify</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QComboBox" name="merchandiseComboBox">
-        <property name="geometry">
-         <rect>
-          <x>108</x>
-          <y>78</y>
-          <width>99</width>
-          <height>32</height>
-         </rect>
-        </property>
-        <property name="editable">
-         <bool>true</bool>
-        </property>
-       </widget>
-       <widget class="QLabel" name="priceLabel">
-        <property name="geometry">
-         <rect>
-          <x>13</x>
-          <y>147</y>
-          <width>90</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>P&amp;rice per piece</string>
-        </property>
-        <property name="buddy">
-         <cstring>priceLineEdit</cstring>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="priceLineEdit">
-        <property name="geometry">
-         <rect>
-          <x>111</x>
-          <y>147</y>
-          <width>125</width>
-          <height>21</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QLabel" name="customerLabel">
-        <property name="geometry">
-         <rect>
-          <x>30</x>
-          <y>44</y>
-          <width>73</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&amp;Client Name</string>
-        </property>
-        <property name="buddy">
-         <cstring>customerComboBox</cstring>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="customerComboBox">
-        <property name="geometry">
-         <rect>
-          <x>108</x>
-          <y>42</y>
-          <width>99</width>
-          <height>32</height>
-         </rect>
-        </property>
-        <property name="editable">
-         <bool>true</bool>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="totalPriceLineEdit">
-        <property name="geometry">
-         <rect>
-          <x>111</x>
-          <y>178</y>
-          <width>125</width>
-          <height>21</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QLabel" name="totalPriceLabel">
-        <property name="geometry">
-         <rect>
-          <x>40</x>
-          <y>178</y>
-          <width>63</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&amp;Total Price</string>
-        </property>
-        <property name="buddy">
-         <cstring>totalPriceLineEdit</cstring>
-        </property>
-       </widget>
-       <widget class="QLabel" name="merchandiseLabel">
-        <property name="geometry">
-         <rect>
-          <x>17</x>
-          <y>80</y>
-          <width>86</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&amp;Product Name</string>
-        </property>
-        <property name="buddy">
-         <cstring>merchandiseComboBox</cstring>
-        </property>
-       </widget>
-       <widget class="QLabel" name="idLabel">
-        <property name="geometry">
-         <rect>
-          <x>17</x>
-          <y>13</y>
-          <width>86</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&amp;Order Number</string>
-        </property>
-        <property name="buddy">
-         <cstring>idLineEdit</cstring>
-        </property>
-       </widget>
-       <widget class="QLabel" name="quantityLabel">
-        <property name="geometry">
-         <rect>
-          <x>52</x>
-          <y>116</y>
-          <width>51</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&amp;Quantity</string>
-        </property>
-        <property name="buddy">
-         <cstring>quantitySpinBox</cstring>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="idLineEdit">
-        <property name="geometry">
-         <rect>
-          <x>111</x>
-          <y>13</y>
-          <width>125</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-       <widget class="QSpinBox" name="quantitySpinBox">
-        <property name="geometry">
-         <rect>
-          <x>111</x>
-          <y>116</y>
-          <width>58</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="maximum">
-         <number>10000</number>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="searchPage">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>411</width>
-         <height>508</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>&amp;Search</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QTreeWidget" name="searchTreeWidget">
-          <property name="rootIsDecorated">
-           <bool>false</bool>
-          </property>
-          <column>
-           <property name="text">
-            <string>ID</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Client Name</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Produce Name</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string># Price</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Quantity</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Total Price</string>
-           </property>
-          </column>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QComboBox" name="searchComboBox">
-            <item>
-             <property name="text">
-              <string>ID</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Client Name</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Product Name</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Price</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Quantity</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Total Price</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="searchLineEdit"/>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="searchPushButton">
-          <property name="text">
-           <string>S&amp;earch</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
+     </column>
+     <column>
+      <property name="text">
+       <string>Phone Number</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Address</string>
+      </property>
+     </column>
     </widget>
-   </item>
-  </layout>
+    <widget class="QTreeWidget" name="merchandiseTreeWidget">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>332</y>
+       <width>387</width>
+       <height>112</height>
+      </rect>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <column>
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Price</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Quantity</string>
+      </property>
+     </column>
+    </widget>
+    <widget class="QComboBox" name="merchandiseComboBox">
+     <property name="geometry">
+      <rect>
+       <x>108</x>
+       <y>78</y>
+       <width>99</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="priceLabel">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>150</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>P&amp;rice</string>
+     </property>
+     <property name="buddy">
+      <cstring>priceLineEdit</cstring>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="priceLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>111</x>
+       <y>147</y>
+       <width>125</width>
+       <height>21</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="customerLabel">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>44</y>
+       <width>73</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&amp;Customer</string>
+     </property>
+     <property name="buddy">
+      <cstring>customerComboBox</cstring>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="customerComboBox">
+     <property name="geometry">
+      <rect>
+       <x>108</x>
+       <y>42</y>
+       <width>99</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="totalPriceLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>111</x>
+       <y>178</y>
+       <width>125</width>
+       <height>21</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="totalPriceLabel">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>180</y>
+       <width>63</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&amp;Total Price</string>
+     </property>
+     <property name="buddy">
+      <cstring>totalPriceLineEdit</cstring>
+     </property>
+    </widget>
+    <widget class="QLabel" name="merchandiseLabel">
+     <property name="geometry">
+      <rect>
+       <x>17</x>
+       <y>80</y>
+       <width>86</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&amp;Merchandise</string>
+     </property>
+     <property name="buddy">
+      <cstring>merchandiseComboBox</cstring>
+     </property>
+    </widget>
+    <widget class="QLabel" name="idLabel">
+     <property name="geometry">
+      <rect>
+       <x>17</x>
+       <y>13</y>
+       <width>86</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&amp;Purchase Number</string>
+     </property>
+     <property name="buddy">
+      <cstring>idLineEdit</cstring>
+     </property>
+    </widget>
+    <widget class="QLabel" name="quantityLabel">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>120</y>
+       <width>51</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&amp;Quantity</string>
+     </property>
+     <property name="buddy">
+      <cstring>quantitySpinBox</cstring>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="idLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>111</x>
+       <y>13</y>
+       <width>125</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="quantitySpinBox">
+     <property name="geometry">
+      <rect>
+       <x>111</x>
+       <y>116</y>
+       <width>58</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>10000</number>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="modifyPushButton">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>150</y>
+       <width>60</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&amp;Modify</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="addPushButton">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>110</y>
+       <width>60</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&amp;Add</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="PurchaseSearch">
+    <attribute name="label">
+     <string>&amp;PurchaseSearch</string>
+    </attribute>
+    <widget class="QTreeWidget" name="searchTreeWidget">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>60</y>
+       <width>321</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <column>
+      <property name="text">
+       <string>ID</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Client Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Produce Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string># Price</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Quantity</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Total Price</string>
+      </property>
+     </column>
+    </widget>
+    <widget class="QComboBox" name="searchComboBox">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>220</y>
+       <width>139</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>ID</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Client Name</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Product Name</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Price</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Quantity</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Total Price</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLineEdit" name="searchLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>225</y>
+       <width>221</width>
+       <height>21</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="searchPushButton">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>260</y>
+       <width>377</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>S&amp;earch</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QTreeWidget" name="treeWidget">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>20</y>
+     <width>400</width>
+     <height>400</height>
+    </rect>
+   </property>
+   <property name="rootIsDecorated">
+    <bool>false</bool>
+   </property>
+   <column>
+    <property name="text">
+     <string>Order Number</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Client Name</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Product Name</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string># Price</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Quantity</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Total Price</string>
+    </property>
+   </column>
+  </widget>
  </widget>
  <resources/>
  <connections/>

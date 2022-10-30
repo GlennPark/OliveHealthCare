@@ -23,123 +23,168 @@
 
 ChattingClient::ChattingClient(QWidget *parent) : QWidget(parent), isSent(false)
 {
-    // 연결한 서버 정보 입력을 위한 위젯들
-        name = new QLineEdit(this);
+    // 서버 주소를 LineEdit(serverAddress)을 통해 입력, 기본 주소 설정
+    name = new QLineEdit(this);
+    serverAddress = new QLineEdit(this);
+    serverAddress->setText("127.0.0.1");
+    //serverAddress->setInputMask("999.999.999.999;_");
 
-        serverAddress = new QLineEdit(this);
-        serverAddress->setText("127.0.0.1");
-        //serverAddress->setInputMask("999.999.999.999;_");
-        QRegularExpression re("^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
-                              "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
-                              "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
-                              "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
-        QRegularExpressionValidator validator(re);
-        serverAddress->setPlaceholderText("Server IP Address");
-        serverAddress->setValidator(&validator);
+    // 서버 주소의 정규 표현식
+    QRegularExpression re("^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+                          "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+                          "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+                          "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+    QRegularExpressionValidator validator(re);
 
-        serverPort = new QLineEdit(this);
-        serverPort->setText(QString::number(PORT_NUMBER));
-        serverPort->setInputMask("00000;_");
-        serverPort->setPlaceholderText("Server Port No");
+    serverAddress->setPlaceholderText("Server IP Address");
+    serverAddress->setValidator(&validator);
 
-        connectButton = new QPushButton(tr("Log In"), this);
-        QHBoxLayout *serverLayout = new QHBoxLayout;
-        serverLayout->addWidget(name);
-        serverLayout->addStretch(1);
-        serverLayout->addWidget(serverAddress);
-        serverLayout->addWidget(serverPort);
-        serverLayout->addWidget(connectButton);
+    // 서버 포트를 serverPort(LineEdit)을 통해 입력, 기본 포트 설정
+    // 값이 변경될 때 까지 메시지 출력
+    serverPort = new QLineEdit(this);
+    serverPort->setText(QString::number(PORT_NUMBER));
+    serverPort->setInputMask("00000;_");
+    serverPort->setPlaceholderText("Server Port No");
 
-        message = new QTextEdit(this);		// 서버에서 오는 메시지 표시용
-        message->setReadOnly(true);
+    // connectButton(PushButton)을 통해 로그인, 채팅 서버로 연결
+    connectButton = new QPushButton(tr("Log In"), this);
 
-        // 서버로 보낼 메시지를 위한 위젯들
-        inputLine = new QLineEdit(this);
-        connect(inputLine, SIGNAL(returnPressed( )), SLOT(sendData( )));
-        connect(inputLine, SIGNAL(returnPressed( )), inputLine, SLOT(clear( )));
-        sentButton = new QPushButton("Send", this);
-        connect(sentButton, SIGNAL(clicked( )), SLOT(sendData( )));
-        connect(sentButton, SIGNAL(clicked( )), inputLine, SLOT(clear( )));
-        inputLine->setEnabled(false);
-        sentButton->setEnabled(false);
+    // 이름, 서버주소, 서버포트,로그인 버튼을 레이아웃에 통합
+    QHBoxLayout *serverLayout = new QHBoxLayout;
+    serverLayout->addWidget(name);
+    serverLayout->addStretch(1);
+    serverLayout->addWidget(serverAddress);
+    serverLayout->addWidget(serverPort);
+    serverLayout->addWidget(connectButton);
 
-        QHBoxLayout *inputLayout = new QHBoxLayout;
-        inputLayout->addWidget(inputLine);
-        inputLayout->addWidget(sentButton);
+    // 서버에서 오는 메시지를 읽기 전용으로 표시
+    message = new QTextEdit(this);
+    message->setReadOnly(true);
 
-        fileButton = new QPushButton("File Transfer", this);
-        connect(fileButton, SIGNAL(clicked( )), SLOT(sendFile( )));
-        fileButton->setDisabled(true);
+    // 서버로 보낼 메시지를 위한 위젯들
+    inputLine = new QLineEdit(this);
 
-        // 종료 기능
-        QPushButton* quitButton = new QPushButton("Log Out", this);
-        connect(quitButton, SIGNAL(clicked( )), qApp, SLOT(quit( )));
+    // inputLine(LineEdit)에서 키보드에서 엔터 키가 눌릴때 sendData 슬롯함수를 실행해서 데이터를 전송한다
+    connect(inputLine, SIGNAL(returnPressed( )), this, SLOT(sendData( )));
 
-        QHBoxLayout *buttonLayout = new QHBoxLayout;
-        buttonLayout->addWidget(fileButton);
-        buttonLayout->addStretch(1);
-        buttonLayout->addWidget(quitButton);
+    // inputLine(LineEdit)에서 키보드에서 엔터 키가 눌릴때 입력단을 비워준다
+    connect(inputLine, SIGNAL(returnPressed( )), inputLine, SLOT(clear( )));
 
-        QVBoxLayout *mainLayout = new QVBoxLayout(this);
-        mainLayout->addLayout(serverLayout);
-        mainLayout->addWidget(message);
-        mainLayout->addLayout(inputLayout);
-        mainLayout->addLayout(buttonLayout);
+    sentButton = new QPushButton("Send", this);
+    // sentButton(PushButton)클릭 시 sendData 슬롯함수를 실행해서 데이터를 전송한다
+    connect(sentButton, SIGNAL(clicked( )), this, SLOT(sendData( )));
 
-        setLayout(mainLayout);
+    // sentButton(PushButton)클릭 시 sendData 슬롯함수를 실행해서 입력단을 비워준다
+    connect(sentButton, SIGNAL(clicked( )), inputLine, SLOT(clear( )));
+    inputLine->setEnabled(false);
+    sentButton->setEnabled(false);
 
-        clientSocket = new QTcpSocket(this);			// 클라이언트 소켓 생성
-        connect(clientSocket, &QAbstractSocket::errorOccurred,
-                [=]{ qDebug( ) << clientSocket->errorString( ); });
-        connect(clientSocket, SIGNAL(readyRead( )), SLOT(receiveData( )));
-        connect(clientSocket, SIGNAL(disconnected( )), SLOT(disconnect( )));
+    // inputLine과 sentButton을 통합하는 레이아웃
+    QHBoxLayout *inputLayout = new QHBoxLayout;
+    inputLayout->addWidget(inputLine);
+    inputLayout->addWidget(sentButton);
 
-        QSettings settings("ChatClient", "Chat Client");
-        name->setText(settings.value("ChatClient/ID").toString());
+    // fileButton 클릭시 sendFile 슬롯함수를 실행해서 파일을 전송한다
+    fileButton = new QPushButton("File Transfer", this);
+    connect(fileButton, SIGNAL(clicked( )), this, SLOT(sendFile( )));
+    fileButton->setDisabled(true);
 
-        //파일 소켓 생성
-        fileClient = new QTcpSocket(this);
-        connect(fileClient, SIGNAL(bytesWritten(qint64)), SLOT(goOnSend(qint64)));
+    // quitButton(PushButton)클릭 시 qApp에서 quit()슬롯함수를 실행하여 로그아웃
+    QPushButton* quitButton = new QPushButton("Log Out", this);
+    connect(quitButton, SIGNAL(clicked( )), qApp, SLOT(quit( )));
 
-        progressDialog = new QProgressDialog(0);
-        progressDialog->setAutoClose(true);
-        progressDialog->reset();
+    // fileButton과 quitButton을 통합하는 레이아웃
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    buttonLayout->addWidget(fileButton);
+    buttonLayout->addStretch(1);
+    buttonLayout->addWidget(quitButton);
 
-        connect(connectButton, &QPushButton::clicked,
-                [=]{
-            if(connectButton->text() == tr("Log In")) {
-                clientSocket->connectToHost(serverAddress->text( ),
-                                            serverPort->text( ).toInt( ));
-                clientSocket->waitForConnected();
-                sendProtocol(Chat_Login, name->text().toStdString().data());
-                connectButton->setText(tr("Chat in"));
-                name->setReadOnly(true);
-            } else if(connectButton->text() == tr("Chat in"))  {
-                sendProtocol(Chat_In, name->text().toStdString().data());
-                connectButton->setText(tr("Chat Out"));
-                inputLine->setEnabled(true);
-                sentButton->setEnabled(true);
-                fileButton->setEnabled(true);
-            } else if(connectButton->text() == tr("Chat Out"))  {
-                sendProtocol(Chat_Out, name->text().toStdString().data());
-                connectButton->setText(tr("Chat in"));
-                inputLine->setDisabled(true);
-                sentButton->setDisabled(true);
-                fileButton->setDisabled(true);
-            }
-        } );
+    // server, input, button 레이아웃과 message위젯을 통합하는 레이아웃
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->addLayout(serverLayout);
+    mainLayout->addWidget(message);
+    mainLayout->addLayout(inputLayout);
+    mainLayout->addLayout(buttonLayout);
 
-        setWindowTitle(tr("Chatting Client"));
+    setLayout(mainLayout);
 
+    // 채팅 사용자를 연결하기 위한 소켓
+    clientSocket = new QTcpSocket(this);
+
+    // 소켓에 에러 발생시 디버깅 메시지 출력
+    connect(clientSocket, &QAbstractSocket::errorOccurred,
+            [=]{ qDebug( ) << clientSocket->errorString( ); });
+
+    // 소켓이 읽을 준비가 되었다는 신호를 보내면 데이터를 전송받는다
+    connect(clientSocket, SIGNAL(readyRead( )), this, SLOT(receiveData( )));
+    // 소켓 연결 해제
+    connect(clientSocket, SIGNAL(disconnected( )), this, SLOT(disconnect( )));
+
+    // ChatClient 의 ID 설정 저장
+    QSettings settings("ChatClient", "Chat Client");
+    name->setText(settings.value("ChatClient/ID").toString());
+
+    // 파일 소켓 생성
+    fileClient = new QTcpSocket(this);
+    connect(fileClient, SIGNAL(bytesWritten(qint64)), SLOT(goOnSend(qint64)));
+
+    // progressDialog : 파일 전송 시 진행 상황 표시후 자동 종료, 리셋
+    progressDialog = new QProgressDialog(0);
+    progressDialog->setAutoClose(true);
+    progressDialog->reset();
+
+    // connectButton(PushButton) 채팅 접속 버튼
+    connect(connectButton, &QPushButton::clicked,
+            [=]{
+
+        // 입력한 서버 주소와 포트 서버 포트를 통해 Host에 연결
+        if(connectButton->text() == tr("Log In"))
+        {
+            clientSocket->connectToHost(serverAddress->text( ),
+                                        serverPort->text( ).toInt( ));
+        // 접속 될 때 까지 대기
+            clientSocket->waitForConnected();
+        // 로그인을 위한 프로토콜 전송, name 을 읽기 전용으로 설정
+            sendProtocol(Chat_Login, name->text().toStdString().data());
+            connectButton->setText(tr("Chat in"));
+            name->setReadOnly(true);
+        }
+        else if(connectButton->text() == tr("Chat in"))
+        {
+        // 채팅방 입장을 위한 프로토콜 전송, 채팅 입력창과 보내기, 파일 전송 활성화
+            sendProtocol(Chat_In, name->text().toStdString().data());
+            connectButton->setText(tr("Chat Out"));
+            inputLine->setEnabled(true);
+            sentButton->setEnabled(true);
+            fileButton->setEnabled(true);
+        }
+        else if(connectButton->text() == tr("Chat Out"))
+        {
+        // 채팅방을 나가기 위한 프로토콜 전송, 채팅 입력창과 보내기, 파일 전송 비활성화
+            sendProtocol(Chat_Out, name->text().toStdString().data());
+            connectButton->setText(tr("Chat in"));
+            inputLine->setDisabled(true);
+            sentButton->setDisabled(true);
+            fileButton->setDisabled(true);
+        }
+    } );
+
+    setWindowTitle(tr("Chatting Client"));
 }
+
+// 채팅 로그아웃
 void ChattingClient::closeEvent(QCloseEvent*)
 {
+
+    // 채팅 로그아웃을 위한 프로토콜 전송, 호스트와의 연결 종료
     sendProtocol(Chat_LogOut, name->text().toStdString().data());
     clientSocket->disconnectFromHost();
+    // 소켓 Unconnected State 가 아니면 연결 종료까지 대기
     if(clientSocket->state() != QAbstractSocket::UnconnectedState)
         clientSocket->waitForDisconnected();
 }
 
+// 채팅 정보 입력받기
 void ChattingClient::receiveData( )
 {
     QTcpSocket *clientSocket = dynamic_cast<QTcpSocket *>(sender( ));

@@ -11,8 +11,8 @@ PurchaseManage::PurchaseManage(QWidget *parent)
     ui->setupUi(this);
 
     QList<int> sizes;
-    sizes << 540 << 400;
-    ui->splitter->setSizes(sizes);
+    sizes << 540 << 600;
+//    ui->splitter->setSizes(sizes);
 
     QAction* removeAction = new QAction(tr("&Remove"));
     connect(removeAction, SIGNAL(triggered()), SLOT(removeItem()));
