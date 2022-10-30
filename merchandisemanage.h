@@ -36,6 +36,7 @@ signals:
     void addedMerchandise(int, QString);
     void sendMerchandiseInfo(QString, int, int);
 
+
 private:
     int makeid();
 

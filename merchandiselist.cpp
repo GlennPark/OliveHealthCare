@@ -1,11 +1,12 @@
 #include "merchandiselist.h"
 
-MerchandiseList::MerchandiseList(int id, QString name, int price, int quantity)
+MerchandiseList::MerchandiseList(int id, QString name, int price, int quantity, QString favorite)
 {
     setText(0, QString::number(id));
     setText(1, name);
     setText(2, QString::number(price));
     setText(3, QString::number(quantity));
+    setText(4, favorite);
 }
 QString MerchandiseList::getName() const
 {
@@ -40,6 +41,16 @@ void MerchandiseList::setQuantity(int& quantity)
 int MerchandiseList::id() const
 {
     return text(0).toInt();
+}
+
+QString MerchandiseList::getFavorite() const
+{
+    return text(4);
+}
+
+void MerchandiseList::setFavorite(QString& favorite)
+{
+    setText(4, favorite);
 }
 
 // Define copy assignment operator.
