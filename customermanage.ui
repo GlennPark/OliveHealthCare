@@ -62,10 +62,10 @@
     <enum>Qt::DefaultContextMenu</enum>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Box</enum>
+    <enum>QFrame::WinPanel</enum>
    </property>
    <property name="frameShadow">
-    <enum>QFrame::Sunken</enum>
+    <enum>QFrame::Plain</enum>
    </property>
    <property name="rootIsDecorated">
     <bool>false</bool>
@@ -130,6 +130,12 @@
      <width>680</width>
      <height>150</height>
     </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::WinPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Plain</enum>
    </property>
    <property name="rootIsDecorated">
     <bool>false</bool>
@@ -197,6 +203,10 @@
    <property name="text">
     <string>&amp;Search</string>
    </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons8-research-64.png</normaloff>:/images/icons8-research-64.png</iconset>
+   </property>
   </widget>
   <widget class="QLineEdit" name="searchLineEdit">
    <property name="geometry">
@@ -236,10 +246,10 @@
   <widget class="QLabel" name="ageLabel">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>213</x>
      <y>280</y>
-     <width>24</width>
-     <height>16</height>
+     <width>41</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -265,10 +275,10 @@
   <widget class="QLabel" name="genderLabel">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>200</x>
      <y>330</y>
-     <width>45</width>
-     <height>16</height>
+     <width>71</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -301,7 +311,7 @@
      <rect>
       <x>70</x>
       <y>0</y>
-      <width>71</width>
+      <width>91</width>
       <height>20</height>
      </rect>
     </property>
@@ -326,10 +336,10 @@
   <widget class="QLabel" name="favoriteLabel">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>197</x>
      <y>240</y>
-     <width>48</width>
-     <height>16</height>
+     <width>71</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -349,8 +359,8 @@
   <widget class="QLabel" name="domainLabel">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>120</y>
+     <x>220</x>
+     <y>160</y>
      <width>16</width>
      <height>16</height>
     </rect>
@@ -413,10 +423,10 @@
   <widget class="QLabel" name="addressLabel">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>199</x>
      <y>190</y>
-     <width>50</width>
-     <height>16</height>
+     <width>71</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -442,10 +452,10 @@
   <widget class="QLabel" name="nameLabel">
    <property name="geometry">
     <rect>
-     <x>236</x>
+     <x>200</x>
      <y>62</y>
-     <width>35</width>
-     <height>16</height>
+     <width>71</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -458,8 +468,8 @@
   <widget class="QLabel" name="idLabel">
    <property name="geometry">
     <rect>
-     <x>258</x>
-     <y>31</y>
+     <x>220</x>
+     <y>30</y>
      <width>16</width>
      <height>16</height>
     </rect>
@@ -474,10 +484,10 @@
   <widget class="QLabel" name="phoneNumberLabel">
    <property name="geometry">
     <rect>
-     <x>181</x>
+     <x>150</x>
      <y>93</y>
-     <width>90</width>
-     <height>16</height>
+     <width>121</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -520,10 +530,10 @@
   <widget class="QLabel" name="emailLabel">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>201</x>
      <y>120</y>
-     <width>32</width>
-     <height>16</height>
+     <width>61</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -531,6 +541,8 @@
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

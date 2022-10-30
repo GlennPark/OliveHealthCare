@@ -16,11 +16,17 @@
   <widget class="QToolBox" name="toolBox">
    <property name="geometry">
     <rect>
-     <x>68</x>
+     <x>58</x>
      <y>12</y>
-     <width>401</width>
+     <width>411</width>
      <height>491</height>
     </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::WinPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Plain</enum>
    </property>
    <property name="currentIndex">
     <number>0</number>
@@ -30,8 +36,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>401</width>
-      <height>423</height>
+      <width>407</width>
+      <height>427</height>
      </rect>
     </property>
     <attribute name="label">
@@ -40,11 +46,17 @@
     <widget class="QTreeWidget" name="customerTreeWidget">
      <property name="geometry">
       <rect>
-       <x>12</x>
-       <y>210</y>
+       <x>10</x>
+       <y>208</y>
        <width>387</width>
        <height>112</height>
       </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::WinPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
      </property>
      <property name="rootIsDecorated">
       <bool>false</bool>
@@ -68,11 +80,17 @@
     <widget class="QTreeWidget" name="merchandiseTreeWidget">
      <property name="geometry">
       <rect>
-       <x>12</x>
-       <y>332</y>
+       <x>10</x>
+       <y>330</y>
        <width>387</width>
        <height>112</height>
       </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::WinPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
      </property>
      <property name="rootIsDecorated">
       <bool>false</bool>
@@ -96,8 +114,8 @@
     <widget class="QComboBox" name="merchandiseComboBox">
      <property name="geometry">
       <rect>
-       <x>108</x>
-       <y>78</y>
+       <x>147</x>
+       <y>80</y>
        <width>99</width>
        <height>32</height>
       </rect>
@@ -111,7 +129,7 @@
       <rect>
        <x>40</x>
        <y>150</y>
-       <width>31</width>
+       <width>101</width>
        <height>16</height>
       </rect>
      </property>
@@ -125,8 +143,8 @@
     <widget class="QLineEdit" name="priceLineEdit">
      <property name="geometry">
       <rect>
-       <x>111</x>
-       <y>147</y>
+       <x>150</x>
+       <y>149</y>
        <width>125</width>
        <height>21</height>
       </rect>
@@ -137,7 +155,7 @@
       <rect>
        <x>30</x>
        <y>44</y>
-       <width>73</width>
+       <width>101</width>
        <height>16</height>
       </rect>
      </property>
@@ -151,8 +169,8 @@
     <widget class="QComboBox" name="customerComboBox">
      <property name="geometry">
       <rect>
-       <x>108</x>
-       <y>42</y>
+       <x>147</x>
+       <y>44</y>
        <width>99</width>
        <height>32</height>
       </rect>
@@ -164,8 +182,8 @@
     <widget class="QLineEdit" name="totalPriceLineEdit">
      <property name="geometry">
       <rect>
-       <x>111</x>
-       <y>178</y>
+       <x>150</x>
+       <y>180</y>
        <width>125</width>
        <height>21</height>
       </rect>
@@ -176,7 +194,7 @@
       <rect>
        <x>20</x>
        <y>180</y>
-       <width>63</width>
+       <width>121</width>
        <height>16</height>
       </rect>
      </property>
@@ -192,7 +210,7 @@
       <rect>
        <x>17</x>
        <y>80</y>
-       <width>86</width>
+       <width>121</width>
        <height>16</height>
       </rect>
      </property>
@@ -206,10 +224,10 @@
     <widget class="QLabel" name="idLabel">
      <property name="geometry">
       <rect>
-       <x>17</x>
+       <x>2</x>
        <y>13</y>
-       <width>86</width>
-       <height>16</height>
+       <width>131</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
@@ -224,7 +242,7 @@
       <rect>
        <x>30</x>
        <y>120</y>
-       <width>51</width>
+       <width>111</width>
        <height>16</height>
       </rect>
      </property>
@@ -238,8 +256,8 @@
     <widget class="QLineEdit" name="idLineEdit">
      <property name="geometry">
       <rect>
-       <x>111</x>
-       <y>13</y>
+       <x>150</x>
+       <y>15</y>
        <width>125</width>
        <height>21</height>
       </rect>
@@ -251,8 +269,8 @@
     <widget class="QSpinBox" name="quantitySpinBox">
      <property name="geometry">
       <rect>
-       <x>111</x>
-       <y>116</y>
+       <x>150</x>
+       <y>118</y>
        <width>58</width>
        <height>21</height>
       </rect>
@@ -289,6 +307,14 @@
     </widget>
    </widget>
    <widget class="QWidget" name="PurchaseSearch">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>407</width>
+      <height>427</height>
+     </rect>
+    </property>
     <attribute name="label">
      <string>&amp;PurchaseSearch</string>
     </attribute>
@@ -300,6 +326,12 @@
        <width>321</width>
        <height>111</height>
       </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::WinPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
      </property>
      <property name="rootIsDecorated">
       <bool>false</bool>
@@ -338,9 +370,9 @@
     <widget class="QComboBox" name="searchComboBox">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>28</x>
        <y>220</y>
-       <width>139</width>
+       <width>131</width>
        <height>32</height>
       </rect>
      </property>
@@ -397,6 +429,10 @@
      <property name="text">
       <string>S&amp;earch</string>
      </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/images/icons8-searching-64.png</normaloff>:/images/icons8-searching-64.png</iconset>
+     </property>
     </widget>
    </widget>
   </widget>
@@ -408,6 +444,12 @@
      <width>400</width>
      <height>400</height>
     </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::WinPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Plain</enum>
    </property>
    <property name="rootIsDecorated">
     <bool>false</bool>
@@ -444,6 +486,8 @@
    </column>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
