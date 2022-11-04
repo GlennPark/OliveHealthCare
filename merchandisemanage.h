@@ -31,6 +31,8 @@ private slots:
     void removeItem();              /* QAction을 위한 슬롯 */
     void acceptMerchandiseInfo(int);
 
+    void on_favoriteTabWidget_tabBarClicked(int index);
+
 signals:
     void addMerchasdise(int, QString);
     void addedMerchandise(int, QString);
