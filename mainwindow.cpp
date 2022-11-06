@@ -12,12 +12,47 @@
 #include "chattingserver.h"
 #include "chattingclient.h"
 
+#include <QtSql>
+
+
+
+
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //DB 셋업
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+
+    db.setHostName("OliveHealthCare");
+    db.setDatabaseName("OliveHealthCare");
+    db.setUserName("hr");
+    db.setPassword("hr");
+
+    bool ok = db.open();
+
+    QSqlQuery qry;
+    qry.exec("SELECT Cid, name FROM customer");
+
+    while(qry.next())
+    {
+        int Cid = qry.value(0).toInt();
+        QString name = qry.value(1).toString();
+        qDebug() << Cid << name;
+    }
+
+    //qry.exec("INSERY INTO customer (Cid, name) VALUES (005, '영선')");
+    //placeholder 방식
+    //qry.prepare("INSERY INTO customer (Cid, name) VALUES (:id, :name, :salary)");
+    for(;;)
+    {
+        qry.bindValue(":Cid", 005);
+        qry.bindValue(":name", "영선");
+    }
 
     customerSearch = new CustomerSearch(this);
     //    ui->mdiArea->addSubWindow(customerSearch);
