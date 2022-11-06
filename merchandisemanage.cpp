@@ -163,3 +163,9 @@ void MerchandiseManage::acceptMerchandiseInfo(int key)
     MerchandiseList* p = merchandiseList[key];
     emit sendMerchandiseInfo(p->getName(), p->getPrice(), p->getQuantity());
 }
+
+void MerchandiseManage::on_favoriteTabWidget_tabBarClicked(int index)
+{
+
+}
+
