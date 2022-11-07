@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     while(qry.next())
     {
+
         int Cid = qry.value(0).toInt();
         QString name = qry.value(1).toString();
         qDebug() << Cid << name;
@@ -47,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //qry.exec("INSERY INTO customer (Cid, name) VALUES (005, '영선')");
     //placeholder 방식
-    //qry.prepare("INSERY INTO customer (Cid, name) VALUES (:id, :name, :salary)");
+    qry.prepare("INSERY INTO customer (Cid, name) VALUES (:id, :name, :salary)");
     for(;;)
     {
         qry.bindValue(":Cid", 005);
