@@ -1,106 +1,170 @@
 #include "customerlist.h"
+#include <QDebug>
 
-CustomerList::CustomerList(int Cid, QString name, QString phoneNumber, QString email, QString domain, QString address, QString favorite, QString age, QString gender)
+CustomerList::CustomerList(QObject *parent):QObject(parent)
 {
-    setText(0, QString::number(Cid));
-    setText(1, name);
-    setText(2, phoneNumber);
-    setText(3, email);
-    setText(4, domain);
-    setText(5, address);
-    setText(6, favorite);
-    setText(7, age);
-    setText(8, gender);
+
 }
 
-QString CustomerList::getName() const
+CustomerList::CustomerList(int &cid, QString &name, QString &phoneNumber, QString &email, QString &domain, QString &address,
+                           QString &favorite, QString &age, QString &gender, QString &joinDate, QObject * parent):QObject(parent),
+    m_cid(cid), m_name(name), m_phoneNumber(phoneNumber), m_email(email), m_domain(domain), m_address(address), m_favorite(favorite), m_age(age), m_gender(gender), m_joinDate(joinDate)
 {
-    return text(1);
+
 }
 
-void CustomerList::setName(QString& name)
+int CustomerList::cid() const
 {
-    setText(1, name);
+    return m_cid;
 }
 
-QString CustomerList::getPhoneNumber() const
+QString CustomerList::name()
 {
-    return text(2);
+    return m_name;
 }
 
-void CustomerList::setPhoneNumber(QString& phoneNumber)
+QString CustomerList::phoneNumber()
 {
-    setText(2, phoneNumber);    // c_str() --> const char*
+    return m_phoneNumber;
 }
 
-QString CustomerList::getEmail() const
+QString CustomerList::email()
 {
-    return text(3);
+    return m_email;
 }
 
-void CustomerList::setEmail(QString& email)
+QString CustomerList::domain()
 {
-    setText(3, email);
+    return m_domain;
 }
 
-QString CustomerList::getDomain() const
+QString CustomerList::address()
 {
-    return text(4);
+    return m_address;
 }
 
-void CustomerList::setDomain(QString& domain)
+QString CustomerList::favorite()
 {
-    setText(4, domain);
+    return m_favorite;
 }
 
-QString CustomerList::getAddress() const
+QString CustomerList::age()
 {
-    return text(5);
+    return m_age;
 }
 
-void CustomerList::setAddress(QString& address)
+QString CustomerList::gender()
 {
-    setText(5, address);
+    return m_gender;
 }
 
-QString CustomerList::getFavorite() const
+QString CustomerList::joinDate()
 {
-    return text(6);
-}
-
-void CustomerList::setFavorite(QString& favorite)
-{
-    setText(6, favorite);
-}
-
-QString CustomerList::getAge() const
-{
-   return text(7);
-}
-
-void CustomerList::setAge(QString& age)
-{
-    setText(7, age);
+    return m_joinDate;
 }
 
 
-QString CustomerList::getGender() const
-{
-    return text(8);
-}
+//CustomerList::CustomerList(int Cid, QString name, QString phoneNumber, QString email, QString domain, QString address, QString favorite, QString age, QString gender)
+//{
+//    setText(0, QString::number(Cid));
+//    setText(1, name);
+//    setText(2, phoneNumber);
+//    setText(3, email);
+//    setText(4, domain);
+//    setText(5, address);
+//    setText(6, favorite);
+//    setText(7, age);
+//    setText(8, gender);
+//}
 
-void CustomerList::setGender(QString& gender)
-{
-    setText(8, gender);
-}
+//QString CustomerList::getName() const
+//{
+//    return text(1);
+//}
 
-int CustomerList::Cid() const
-{
-    return text(0).toInt();
-}
+//void CustomerList::setName(QString& name)
+//{
+//    setText(1, name);
+//}
 
-// Define copy assignment operator.
-bool CustomerList::operator==(const CustomerList &other) const
-{
-    return (this->text(1) == other.text(1));
-}
+//QString CustomerList::getPhoneNumber() const
+//{
+//    return text(2);
+//}
+
+//void CustomerList::setPhoneNumber(QString& phoneNumber)
+//{
+//    setText(2, phoneNumber);    // c_str() --> const char*
+//}
+
+//QString CustomerList::getEmail() const
+//{
+//    return text(3);
+//}
+
+//void CustomerList::setEmail(QString& email)
+//{
+//    setText(3, email);
+//}
+
+//QString CustomerList::getDomain() const
+//{
+//    return text(4);
+//}
+
+//void CustomerList::setDomain(QString& domain)
+//{
+//    setText(4, domain);
+//}
+
+//QString CustomerList::getAddress() const
+//{
+//    return text(5);
+//}
+
+//void CustomerList::setAddress(QString& address)
+//{
+//    setText(5, address);
+//}
+
+//QString CustomerList::getFavorite() const
+//{
+//    return text(6);
+//}
+
+//void CustomerList::setFavorite(QString& favorite)
+//{
+//    setText(6, favorite);
+//}
+
+//QString CustomerList::getAge() const
+//{
+//   return text(7);
+//}
+
+//void CustomerList::setAge(QString& age)
+//{
+//    setText(7, age);
+//}
+
+
+//QString CustomerList::getGender() const
+//{
+//    return text(8);
+//}
+
+//void CustomerList::setGender(QString& gender)
+//{
+//    setText(8, gender);
+//}
+
+//int CustomerList::Cid() const
+//{
+//    return text(0).toInt();
+//}
+
+//// Define copy assignment operator.
+//bool CustomerList::operator==(const CustomerList &other) const
+//{
+//    return (this->text(1) == other.text(1));
+//}

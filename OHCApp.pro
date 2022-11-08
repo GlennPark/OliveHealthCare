@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     chattingclient.cpp \
     chattingserver.cpp \
+    customerdb.cpp \
     customerlist.cpp \
     customermanage.cpp \
     customersearch.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
 HEADERS += \
     chattingclient.h \
     chattingserver.h \
+    customerdb.h \
     customerlist.h \
     customermanage.h \
     customersearch.h \

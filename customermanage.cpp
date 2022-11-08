@@ -5,14 +5,22 @@
 #include <QFile>
 #include <QMenu>
 #include <QMessageBox>
-CustomerManage::CustomerManage(QWidget *parent)
+
+#include <QSqlDatabase>
+#include <QtSql>
+#include <QListView>
+#include <QTableView>
+CustomerManage::CustomerManage(QWidget* parent)
     : QWidget(parent), ui(new Ui::CustomerManage)
 {
     ui->setupUi(this);
 
+
     QList<int> size;
     size << 600 << 600;
 //   ui->splitter->setSizes(size);
+
+    CustomerDB * customerDB = new CustomerDB(this);
 
     QAction* removeAction = new QAction(tr("&Remove"));
     connect(removeAction, SIGNAL(triggered()), SLOT(removeItem()));
@@ -242,5 +250,12 @@ ui->ageSpinBox->text();
     {
         ui->femaleButton->text();
     }
+}
+
+
+void CustomerManage::on_tableView_activated(const QModelIndex &index)
+{
+
+
 }
 
