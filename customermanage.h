@@ -12,7 +12,6 @@ class CustomerList;
 class QMenu;
 class QTreeWidgetItem;
 
-class QTableView;
 
 namespace Ui {
 class CustomerManage;

@@ -10,6 +10,13 @@
 #include <QtSql>
 #include <QListView>
 #include <QTableView>
+#include <QSqlTableModel>
+#include <QSqlError>
+#include <QSqlQuery>
+
+
+
+
 CustomerManage::CustomerManage(QWidget* parent)
     : QWidget(parent), ui(new Ui::CustomerManage)
 {
@@ -18,9 +25,49 @@ CustomerManage::CustomerManage(QWidget* parent)
 
     QList<int> size;
     size << 600 << 600;
-//   ui->splitter->setSizes(size);
+    //   ui->splitter->setSizes(size);
 
-    CustomerDB * customerDB = new CustomerDB(this);
+    QSqlDatabase cdb = QSqlDatabase::addDatabase("QSQLITE");
+    cdb.setDatabaseName("customerDatabase.db");
+    if(!cdb.open()) return;
+
+    QSqlQuery *cQuery = new QSqlQuery;
+    cQuery->exec("CREATE TABLE IF NOT EXISTS customer"
+                 "(cid INTEGER PRIMARY KEY, "
+                 "name VARCHAR(20), "
+                 "phoneNumber VARCHAR(100), "
+                 "email VARCHAR(100), "
+                 "domain VARCHAR(100), "
+                 "address VARCHAR(200), "
+                 "favorite VARCHAR(100), "
+                 "age NUMBER, "
+                 "gender VARCHAR(50), "
+                 "joinDate DATE);");
+
+    //      cQuery.exec("INSERT INTO customer VALUES(000, 'BBQ', 1746, 'downgear', 'naver.com');");
+
+    QSqlTableModel *cModel= new QSqlTableModel;
+    cModel->setTable("customer");
+    //cModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    cModel->select();
+
+    cModel->setHeaderData(0, Qt::Horizontal, tr("CID"));
+    cModel->setHeaderData(1, Qt::Horizontal, tr("NAME"));
+    cModel->setHeaderData(2, Qt::Horizontal, tr("PHONENUMBER"));
+    cModel->setHeaderData(3, Qt::Horizontal, tr("EMAIL"));
+    cModel->setHeaderData(4, Qt::Horizontal, tr("DOMAIN"));
+    cModel->setHeaderData(5, Qt::Horizontal, tr("ADDRESS"));
+    cModel->setHeaderData(6, Qt::Horizontal, tr("FAVORITE"));
+    cModel->setHeaderData(7, Qt::Horizontal, tr("AGE"));
+    cModel->setHeaderData(8, Qt::Horizontal, tr("GENDER"));
+    cModel->setHeaderData(9, Qt::Horizontal, tr("JOINDATE"));
+
+    ui->tableView->setModel(cModel);
+    //    ui->tableView->setWindowTitle(QObject::tr("cModel"));
+    //    ui->tableView->show();
+
+    //    connect(ui->tableView, SIGNAL(on_tableView_activated), this, SLOT(showContextMenu(QPoint)));
+
 
     QAction* removeAction = new QAction(tr("&Remove"));
     connect(removeAction, SIGNAL(triggered()), SLOT(removeItem()));
@@ -68,7 +115,7 @@ void CustomerManage::dataSave()
     QFile file("customer.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
-//    qDebug()<<file.isOpen();
+    //    qDebug()<<file.isOpen();
 
     QTextStream in(&file);
     while (!in.atEnd()) {
@@ -234,14 +281,14 @@ void CustomerManage::radioCheck()
 void CustomerManage::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
 {
     Q_UNUSED(column);
-ui->idLineEdit->setText(item->text(0));
-ui->nameLineEdit->setText(item->text(1));
-ui->phoneNumberLineEdit->setText(item->text(2));
-ui->emailLineEdit->setText(item->text(3));
-ui->domainComboBox->currentText();
-ui->addressLineEdit->setText(item->text(5));
-ui->favoriteComboBox->currentText();
-ui->ageSpinBox->text();
+    ui->idLineEdit->setText(item->text(0));
+    ui->nameLineEdit->setText(item->text(1));
+    ui->phoneNumberLineEdit->setText(item->text(2));
+    ui->emailLineEdit->setText(item->text(3));
+    ui->domainComboBox->currentText();
+    ui->addressLineEdit->setText(item->text(5));
+    ui->favoriteComboBox->currentText();
+    ui->ageSpinBox->text();
     if(ui->maleButton->isChecked())
     {
         ui->maleButton->text();
@@ -253,8 +300,9 @@ ui->ageSpinBox->text();
 }
 
 
-void CustomerManage::on_tableView_activated(const QModelIndex &index)
+void CustomerManage::on_tableView_activated(const QModelIndex &rindex)
 {
+
 
 
 }

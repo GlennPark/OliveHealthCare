@@ -540,6 +540,16 @@
     <string>Email</string>
    </property>
   </widget>
+  <widget class="QTableView" name="tableView">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>20</y>
+     <width>361</width>
+     <height>291</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="resources.qrc"/>

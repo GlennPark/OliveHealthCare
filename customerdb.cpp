@@ -1,7 +1,12 @@
 #include "customerdb.h"
 
 CustomerDB::CustomerDB(QObject *parent)
-    : QObject{parent}
+    :QAbstractListModel(parent)
+{
+
+}
+
+CustomerDB::~CustomerDB()
 {
 
 }
