@@ -29,7 +29,7 @@ private:
     QMenu* menu;
 
 public slots:
-    void addCustomer(int, QString);
+    void addCustomer(int);
     void addMerchandise(int, QString);
     void getCustomerInfo(QString, QString, QString);     // 응답
     void getMerchandiseInfo(QString, int, int);     // 응답

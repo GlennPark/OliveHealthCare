@@ -543,14 +543,45 @@
   <widget class="QTableView" name="tableView">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>20</y>
-     <width>361</width>
-     <height>291</height>
+     <x>-30</x>
+     <y>430</y>
+     <width>301</width>
+     <height>181</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QDateEdit" name="dateEdit">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>380</y>
+     <width>110</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>phoneNumberLineEdit</tabstop>
+  <tabstop>emailLineEdit</tabstop>
+  <tabstop>domainComboBox</tabstop>
+  <tabstop>addressLineEdit</tabstop>
+  <tabstop>favoriteComboBox</tabstop>
+  <tabstop>ageSpinBox</tabstop>
+  <tabstop>maleButton</tabstop>
+  <tabstop>femaleButton</tabstop>
+  <tabstop>dateEdit</tabstop>
+  <tabstop>addPushButton</tabstop>
+  <tabstop>modifyPushButton</tabstop>
+  <tabstop>searchTreeWidget</tabstop>
+  <tabstop>treeWidget</tabstop>
+  <tabstop>searchPushButton</tabstop>
+  <tabstop>tableView</tabstop>
+  <tabstop>searchComboBox</tabstop>
+  <tabstop>searchLineEdit</tabstop>
+  <tabstop>idLineEdit</tabstop>
+  <tabstop>nameLineEdit</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

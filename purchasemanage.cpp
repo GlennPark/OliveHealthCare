@@ -69,10 +69,10 @@ PurchaseManage::~PurchaseManage()
     file.close( );
 }
 
-void PurchaseManage::addCustomer(int id, QString name)
+void PurchaseManage::addCustomer(int id)
 {
     CidList << id;
-    ui->customerComboBox->addItem(name);
+ //   ui->customerComboBox->addItem();
 }
 
 void PurchaseManage::addMerchandise(int id, QString name)

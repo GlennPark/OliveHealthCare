@@ -3,14 +3,18 @@
 
 #include <QWidget>
 #include <QHash>
-#include <QList>
+
 
 //#include <QAbstractListModel>
 //#include "customerlist.h"
 
 class CustomerList;
-class QMenu;
 class QTreeWidgetItem;
+
+class QMenu;
+
+class QSqlDatabase;
+class QSqlTableModel;
 
 
 namespace Ui {
@@ -34,13 +38,12 @@ private slots:
     void on_modifyPushButton_clicked();
     void on_searchPushButton_clicked();
     void acceptCustomerInfo(int);
-    void radioCheck();
+
     void on_treeWidget_itemClicked(QTreeWidgetItem *item, int column);
 
-    void on_tableView_activated(const QModelIndex &index);
 
 signals:
-    void addedCustomer(int, QString);
+    void addedCustomer(int);
     void sendCustomerInfo(QString, QString, QString, QString, QString, QString, QString,  QString);
 
 private:
@@ -48,9 +51,11 @@ private:
 
     int makeCid();
 
+    QSqlTableModel *cModel;
     QMap<int, CustomerList*> customerList;
     Ui::CustomerManage *ui;
     QMenu* menu;
+
 
 };
 

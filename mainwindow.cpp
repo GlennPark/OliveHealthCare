@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    //DB 셋업
+
 //    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
 
 //    db.setHostName("OliveHealthCare");
