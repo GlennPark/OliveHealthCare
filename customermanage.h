@@ -44,7 +44,7 @@ private slots:
 
 signals:
     void addedCustomer(int);
-    void sendCustomerInfo(QString, QString, QString, QString, QString, QString, QString,  QString);
+    void sendCustomerInfo(QString, QString, QString, QString, QString, QString, int, QString,  QString);
 
 private:
     //    QList<Customer *>Customers;

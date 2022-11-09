@@ -543,8 +543,8 @@
   <widget class="QTableView" name="tableView">
    <property name="geometry">
     <rect>
-     <x>-30</x>
-     <y>430</y>
+     <x>60</x>
+     <y>420</y>
      <width>301</width>
      <height>181</height>
     </rect>

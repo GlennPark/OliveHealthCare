@@ -61,7 +61,7 @@ void CustomerManage::dataSave()
                     "favorite VARCHAR(100), "
                     "age INTEGER, "
                     "gender VARCHAR(50), "
-                    "joinDate DATETIME);");
+                    "joinDate DATE);");
 
         //       cModel = new QSqlTableModel();
 
@@ -80,23 +80,23 @@ void CustomerManage::dataSave()
         cModel->setHeaderData(8, Qt::Horizontal, tr("GENDER"));
         cModel->setHeaderData(9, Qt::Horizontal, tr("JOINDATE"));
     }
-        ui->tableView->setModel(cModel);
-        ui->tableView->resizeColumnsToContents();
-        for(int i = 0; i < cModel->rowCount(); i++)
-        {
-            int Cid = cModel->data(cModel->index(i, 0)).toInt();
-            QString name = cModel->data(cModel->index(i, 1)).toString();
-            QString phoneNumber = cModel->data(cModel->index(i, 2)).toString();
-            QString email = cModel->data(cModel->index(i, 3)).toString();
-            QString domain = cModel->data(cModel->index(i, 4)).toString();
-            QString address = cModel->data(cModel->index(i, 5)).toString();
-            QString favorite = cModel->data(cModel->index(i, 6)).toString();
-            int age = cModel->data(cModel->index(i, 7)).toInt();
-            QString gender = cModel->data(cModel->index(i, 8)).toString();
-            QDateTime joinDate = cModel->data(cModel->index(i, 9)).toDateTime();
+    ui->tableView->setModel(cModel);
+    ui->tableView->resizeColumnsToContents();
+    for(int i = 0; i < cModel->rowCount(); i++)
+    {
+        int Cid = cModel->data(cModel->index(i, 0)).toInt();
+        QString name = cModel->data(cModel->index(i, 1)).toString();
+        QString phoneNumber = cModel->data(cModel->index(i, 2)).toString();
+        QString email = cModel->data(cModel->index(i, 3)).toString();
+        QString domain = cModel->data(cModel->index(i, 4)).toString();
+        QString address = cModel->data(cModel->index(i, 5)).toString();
+        QString favorite = cModel->data(cModel->index(i, 6)).toString();
+        int age = cModel->data(cModel->index(i, 7)).toInt();
+        QString gender = cModel->data(cModel->index(i, 8)).toString();
+        QString joinDate = cModel->data(cModel->index(i, 9)).toString();
 
-            emit addedCustomer(Cid);
-        }
+        emit addedCustomer(Cid);
+    }
 
 }
 
@@ -163,7 +163,7 @@ void CustomerManage::on_searchPushButton_clicked()
                    : Qt::MatchCaseSensitive;
     {
         QModelIndexList indexList = cModel->match(cModel->index(0, i),
-        Qt::EditRole, ui->searchLineEdit->text(), -1, Qt::MatchFlags(flag));
+                                                  Qt::EditRole, ui->searchLineEdit->text(), -1, Qt::MatchFlags(flag));
 
         foreach(auto k, indexList)
         {
@@ -181,7 +181,7 @@ void CustomerManage::on_searchPushButton_clicked()
             stringList << QString::number(Cid) << name << phoneNumber << email << domain << address << favorite << QString::number(age) << gender<< joinDate;
             new QTreeWidgetItem(ui->searchTreeWidget, stringList);
             for(int i = 0; i < ui->searchTreeWidget->columnCount(); i++)
-            ui->searchTreeWidget->resizeColumnToContents(i);
+                ui->searchTreeWidget->resizeColumnToContents(i);
         }
     }
 }
@@ -201,67 +201,42 @@ int CustomerManage::makeCid( )
 }
 
 
-CustomerManage::~CustomerManage()
-{
-    delete ui;
-
-    QSqlDatabase database = QSqlDatabase::database("customerConnection");
-
-    QFile file("customer.txt");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-        return;
-
-    QTextStream out(&file);
-    for (const auto& v : customerList) {
-        CustomerList* c = v;
-        out << c->Cid() << ", " << c->getName() << ", ";
-        out << c->getPhoneNumber() << ", ";
-        out << c->getEmail() << ", ";
-        out << c->getDomain() << ", ";
-        out << c->getAddress() << ", ";
-        out << c->getFavorite() << ", ";
-        out << c->getAge() << ", ";
-        out << c->getGender() << "\n";
-    }
-    file.close( );
-}
-
-
-
 void CustomerManage::removeItem()
 {
-    QTreeWidgetItem* item = ui->treeWidget->currentItem();
-    if(item != nullptr) {
-        customerList.remove(item->text(0).toInt());
-        ui->treeWidget->takeTopLevelItem(ui->treeWidget->indexOfTopLevelItem(item));
-        //        delete item;
-        ui->treeWidget->update();
+    QModelIndex modelIndex = ui->tableView->currentIndex();
+    if(modelIndex.isValid())
+    {
+        cModel->removeRow(modelIndex.row());
+        cModel->select();
+        ui->tableView->resizeColumnsToContents();
     }
 }
 
 void CustomerManage::showContextMenu(const QPoint &pos)
 {
-    QPoint globalPos = ui->treeWidget->mapToGlobal(pos);
-    menu->exec(globalPos);
+    QPoint globalPos = ui->tableView->mapToGlobal(pos);
+    if(ui->tableView->indexAt(pos).isValid())
+        menu->exec(globalPos);
 }
 
 
 void CustomerManage::on_modifyPushButton_clicked()
 {
-    QTreeWidgetItem* item = ui->treeWidget->currentItem();
-    if(item != nullptr) {
-        int key = item->text(0).toInt();
-        CustomerList* c = customerList[key];
-        QString name, number, email, domain, address, favorite, age, gender;
+
+    QModelIndex modelIndex = ui->tableView->currentIndex();
+    if(modelIndex.isValid())
+    {
+ //       int Cid=cModel->data(modelIndex.siblingAtColumn(0)).toInt();
+        QString name, phoneNumber, email, domain, address, favorite, gender, joinDate;
+        int age;
+
         name = ui->nameLineEdit->text();
-        number = ui->phoneNumberLineEdit->text();
+        phoneNumber = ui->phoneNumberLineEdit->text();
         email = ui->emailLineEdit->text();
         domain = ui->domainComboBox->currentText();
-        address = ui->addressLineEdit->text();
         favorite = ui->favoriteComboBox->currentText();
-        age = ui->ageSpinBox->text();
-        //        gender = ui->maleButton->text();
-
+        address = ui->addressLineEdit->text();
+        age = ui->ageSpinBox->value();
 
         if(ui->maleButton->isChecked())
         {
@@ -272,18 +247,39 @@ void CustomerManage::on_modifyPushButton_clicked()
             gender = ui->femaleButton->text();
         }
 
+        joinDate = ui->dateEdit->dateTime().toString();
+#if 1
+//        cModel->setData(modelIndex.siblingAtColumn(0), Cid);
+        cModel->setData(modelIndex.siblingAtColumn(1), name);
+        cModel->setData(modelIndex.siblingAtColumn(2), phoneNumber);
+        cModel->setData(modelIndex.siblingAtColumn(3), email);
+        cModel->setData(modelIndex.siblingAtColumn(4), domain);
+        cModel->setData(modelIndex.siblingAtColumn(5), address);
+        cModel->setData(modelIndex.siblingAtColumn(6), favorite);
+        cModel->setData(modelIndex.siblingAtColumn(7), age);
+        cModel->setData(modelIndex.siblingAtColumn(8), gender);
+        cModel->setData(modelIndex.siblingAtColumn(9), joinDate);
+        cModel->submit();
 
+#else
+        QSqlQuery cQuery(cModel->database());
+        cQuery.prepare("UPDATE customer SET name = ?, phoneNumber = ?, email = ?, domain = ?, address = ?, favorite = ?, age = ?, gender = ?, joinDate = ? WHERE Cid = ?");
 
-        c->setName(name);
-        c->setPhoneNumber(number);
-        c->setEmail(email);
-        c->setDomain(domain);
-        c->setAddress(address);
-        c->setFavorite(favorite);
-        c->setAge(age);
-        c->setGender(gender);
+        cQuery.bindValue(0, name);
+        cQuery.bindValue(1, phoneNumber);
+        cQuery.bindValue(2, email);
+        cQuery.bindValue(3, domain);
+        cQuery.bindValue(4, address);
+        cQuery.bindValue(5, favorite);
+        cQuery.bindValue(6, age);
+        cQuery.bindValue(7, gender);
+        cQuery.bindValue(8, joinDate);
+        cQuery.bindValue(9, Cid);
+        cQuery.exec();
+#endif
+        cModel->select();
+        ui->tableView->resizeColumnsToContents();
 
-        customerList[key] = c;
     }
 }
 
@@ -293,10 +289,24 @@ void CustomerManage::acceptCustomerInfo(int key)
 
     QModelIndexList indexList =
             cModel->match(cModel->index(0, 0), Qt::EditRole, key, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
-    CustomerList* c = customerList[key];
-    emit sendCustomerInfo(c->getName(), c->getPhoneNumber(), c-> getEmail(), c->getDomain(), c->getAddress(), c->getFavorite(), c->getAge(), c->getGender());
-}
 
+    foreach(auto k, indexList)
+    {
+ //       int Cid = cModel->data(k.siblingAtColumn(0)).toInt();
+        QString name = cModel->data(k.siblingAtColumn(1)).toString();
+        QString phoneNumber = cModel->data(k.siblingAtColumn(2)).toString();
+        QString email = cModel->data(k.siblingAtColumn(3)).toString();
+        QString domain = cModel->data(k.siblingAtColumn(4)).toString();
+        QString address = cModel->data(k.siblingAtColumn(5)).toString();
+        QString favorite = cModel->data(k.siblingAtColumn(6)).toString();
+        int age = cModel->data(k.siblingAtColumn(7)).toInt();
+        QString gender = cModel->data(k.siblingAtColumn(8)).toString();
+        QString joinDate = cModel->data(k.siblingAtColumn(9)).toString();
+
+    emit sendCustomerInfo(name, phoneNumber, email, domain, address, favorite, age, gender, joinDate);
+
+    }
+}
 
 
 
@@ -321,5 +331,19 @@ void CustomerManage::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column
     }
 }
 
+
+CustomerManage::~CustomerManage()
+{
+    delete ui;
+
+    QSqlDatabase database = QSqlDatabase::database("customerConnection");
+
+    if(database.isOpen())
+    {
+        cModel->submitAll();
+        database.commit();
+        database.close();
+    }
+}
 
 
