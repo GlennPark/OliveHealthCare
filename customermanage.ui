@@ -178,9 +178,9 @@
   <widget class="QComboBox" name="favoriteComboBox">
    <property name="geometry">
     <rect>
-     <x>633</x>
+     <x>620</x>
      <y>220</y>
-     <width>100</width>
+     <width>130</width>
      <height>32</height>
     </rect>
    </property>
@@ -216,9 +216,9 @@
   <widget class="QSpinBox" name="ageSpinBox">
    <property name="geometry">
     <rect>
-     <x>653</x>
+     <x>660</x>
      <y>260</y>
-     <width>41</width>
+     <width>50</width>
      <height>21</height>
     </rect>
    </property>
@@ -268,7 +268,7 @@
      <rect>
       <x>70</x>
       <y>0</y>
-      <width>91</width>
+      <width>71</width>
       <height>20</height>
      </rect>
     </property>
@@ -331,7 +331,7 @@
     <rect>
      <x>300</x>
      <y>340</y>
-     <width>126</width>
+     <width>130</width>
      <height>32</height>
     </rect>
    </property>
@@ -505,6 +505,12 @@
      <width>680</width>
      <height>200</height>
     </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::WinPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Plain</enum>
    </property>
   </widget>
   <widget class="QDateEdit" name="dateEdit">

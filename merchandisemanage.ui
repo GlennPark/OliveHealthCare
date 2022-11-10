@@ -335,7 +335,7 @@
     <rect>
      <x>290</x>
      <y>354</y>
-     <width>103</width>
+     <width>130</width>
      <height>32</height>
     </rect>
    </property>
@@ -374,13 +374,19 @@
      <height>111</height>
     </rect>
    </property>
+   <property name="frameShape">
+    <enum>QFrame::WinPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Plain</enum>
+   </property>
   </widget>
   <widget class="QComboBox" name="categoryComboBox">
    <property name="geometry">
     <rect>
      <x>290</x>
      <y>384</y>
-     <width>103</width>
+     <width>130</width>
      <height>32</height>
     </rect>
    </property>
