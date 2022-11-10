@@ -39,9 +39,9 @@ private slots:
     void on_columnView_clicked(QModelIndex &index);
 
 signals:
-    void addMerchasdise(int, QString);
-    void addedMerchandise(int, QString);
-    void sendMerchandiseInfo(QString, int, int);
+    void addMerchasdise(int);
+    void addedMerchandise(int);
+    void sendMerchandiseInfo(QString, QString, QString, QString, QString, QString);
 
 
 private:

@@ -26,7 +26,7 @@
   <widget class="QPushButton" name="addPushButton">
    <property name="geometry">
     <rect>
-     <x>550</x>
+     <x>530</x>
      <y>370</y>
      <width>100</width>
      <height>32</height>
@@ -39,7 +39,7 @@
   <widget class="QPushButton" name="modifyPushButton">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>640</x>
      <y>370</y>
      <width>100</width>
      <height>32</height>
@@ -154,7 +154,7 @@
      <x>650</x>
      <y>605</y>
      <width>150</width>
-     <height>30</height>
+     <height>32</height>
     </rect>
    </property>
    <property name="text">
@@ -203,7 +203,7 @@
   <widget class="QLabel" name="ageLabel">
    <property name="geometry">
     <rect>
-     <x>556</x>
+     <x>560</x>
      <y>260</y>
      <width>41</width>
      <height>20</height>
@@ -234,7 +234,7 @@
     <rect>
      <x>543</x>
      <y>300</y>
-     <width>71</width>
+     <width>51</width>
      <height>20</height>
     </rect>
    </property>
@@ -527,7 +527,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>EnrollDate</string>
+    <string>Join Date</string>
    </property>
   </widget>
  </widget>

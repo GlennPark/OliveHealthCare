@@ -81,6 +81,7 @@ void CustomerManage::dataSave()
     }
     ui->tableView->setModel(cModel);
     ui->tableView->resizeColumnsToContents();
+
     for(int i = 0; i < cModel->rowCount(); i++)
     {
         int Cid = cModel->data(cModel->index(i, 0)).toInt();

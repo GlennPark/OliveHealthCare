@@ -29,8 +29,8 @@ MerchandiseManage::MerchandiseManage(QWidget* parent)
     menu = new QMenu;
     menu->addAction(removeAction);
 
-    ui->columnView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->columnView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+    ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
     connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(on_searchPushButton_clicked()));
 
 }
@@ -67,73 +67,33 @@ void MerchandiseManage::dataSave()
         mModel->setHeaderData(7, Qt::Horizontal, tr("ENROLLDATE"));
 
     }
+    ui->tableView->setModel(mModel);
+    ui->tableView->resizeColumnsToContents()
 
+    for(int i = 0; i <mModel->rowCount(); i++)
+    {
+        int Mid = mModel->data(mModel->index(i, 0)).toInt();
+        QString pname = mModel->data(mModel->index(i, 1)).toString();
+        QString price = mModel->data(mModel->index(i, 2)).toString();
+        QString quantity = mModel->data(mModel->index(i, 3)).toString();
+        QString madein = mModel->data(mModel->index(i, 4)).toString();
+        QString category = mModel->data(mModel->index(i, 5)).toString();
+        QString description = mModel->data(mModel->index(i, 6)).toString();
+        QString enrolldate = mModel->data(mModel->index(i, 7)).toString();
 
-
-    QFile file("merchandise.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
-
-    QTextStream in(&file);
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        QList<QString> row = line.split(", ");
-        if(row.size()) {
-            int id = row[0].toInt();
-            MerchandiseList* c = new MerchandiseList(id, row[1], row[2].toInt(), row[3].toInt());
-//            ui->columnView->addTopLevelItem(c);
-            merchandiseList.insert(id, c);
-            emit addedMerchandise(id, row[1]);
-        }
+        emit addedMerchandise(Mid);
     }
-    file.close( );
-}
 
-MerchandiseManage::~MerchandiseManage()
-{
-    delete ui;
 
-    QFile file("merchandise.txt");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-        return;
-
-    QTextStream out(&file);
-    for (const auto& v : merchandiseList) {
-        MerchandiseList* c = v;
-        out << c->id() << ", " << c->getName() << ", ";
-        out << c->getPrice() << ", ";
-        out << c->getQuantity() << "\n";
-    }
-    file.close( );
-}
-
-int MerchandiseManage::makeid( )
-{
-    if(merchandiseList.size( ) == 0) {
-        return 200;
-    } else {
-        auto id = merchandiseList.lastKey();
-        return ++id;
-    }
-}
-
-void MerchandiseManage::removeItem()
-{
-    QTreeWidgetItem* item = ui->treeWidget->currentItem();
-    if(item != nullptr) {
-        merchandiseList.remove(item->text(0).toInt());
-        ui->treeWidget->takeTopLevelItem(ui->treeWidget->indexOfTopLevelItem(item));
-//        delete item;
-        ui->treeWidget->update();
-    }
 }
 
 void MerchandiseManage::on_addPushButton_clicked()
 {
-    int id = makeid( );
+    int Mid = makeMid( );
+    QString pname, price, quantity, madein, category, description, enrolldate;
+
     ui->idLineEdit->setText(QString::number(id));
-    QString name;
-    int price, quantity;
+
     name = ui->nameLineEdit->text();
     price = ui->priceLineEdit->text().toInt();
     quantity = ui->quantitySpinBox->value();
@@ -162,6 +122,31 @@ void MerchandiseManage::on_modifyPushButton_clicked()
         merchandiseList[key] = c;
     }
 }
+
+
+
+int MerchandiseManage::makeid( )
+{
+    if(merchandiseList.size( ) == 0) {
+        return 200;
+    } else {
+        auto id = merchandiseList.lastKey();
+        return ++id;
+    }
+}
+
+void MerchandiseManage::removeItem()
+{
+    QTreeWidgetItem* item = ui->treeWidget->currentItem();
+    if(item != nullptr) {
+        merchandiseList.remove(item->text(0).toInt());
+        ui->treeWidget->takeTopLevelItem(ui->treeWidget->indexOfTopLevelItem(item));
+//        delete item;
+        ui->treeWidget->update();
+    }
+}
+
+
 
 void MerchandiseManage::on_treeWidget_customContextMenuRequested(const QPoint &pos)
 {
@@ -218,3 +203,20 @@ void MerchandiseManage::on_columnView_clicked(QModelIndex &index)
 
 }
 
+MerchandiseManage::~MerchandiseManage()
+{
+    delete ui;
+
+    QFile file("merchandise.txt");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        return;
+
+    QTextStream out(&file);
+    for (const auto& v : merchandiseList) {
+        MerchandiseList* c = v;
+        out << c->id() << ", " << c->getName() << ", ";
+        out << c->getPrice() << ", ";
+        out << c->getQuantity() << "\n";
+    }
+    file.close( );
+}
