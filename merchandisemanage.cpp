@@ -4,6 +4,16 @@
 
 #include <QFile>
 #include <QMenu>
+#include <QMessageBox>
+
+#include <QSqlDatabase>
+#include <QSqlTableModel>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QSqlRecord>
+
+
+
 
 MerchandiseManage::MerchandiseManage(QWidget* parent)
     : QWidget(parent), ui(new Ui::MerchandiseManage)
@@ -15,18 +25,51 @@ MerchandiseManage::MerchandiseManage(QWidget* parent)
 //    ui->splitter->setSizes(size);
 
     QAction* removeAction = new QAction(tr("&Remove"));
-    connect(removeAction, SIGNAL(triggered()), SLOT(removeItem()));
-
+    connect(removeAction, SIGNAL(triggered()), this, SLOT(removeItem()));
     menu = new QMenu;
     menu->addAction(removeAction);
-    ui->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
+    ui->columnView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->columnView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
     connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(on_searchPushButton_clicked()));
 
 }
 
 void MerchandiseManage::dataSave()
 {
+    QSqlDatabase ohcDB = QSqlDatabase::addDatabase("QSQLITE","merchandiseConnection");
+    ohcDB.setDatabaseName("merchandiseDatabase.db");
+
+    if(ohcDB.open())
+    {
+        QSqlQuery mQuery(ohcDB);
+        mQuery.exec("CREATE TABLE IF NOT EXISTS merchandise"
+                    "(pid INTEGER PRIMARY KEY,"
+                    "pname VARCHAR(20), "
+                    "price VARCHAR(100), "
+                    "quantity VARCHAR(100), "
+                    "madein VARCHAR(100), "
+                    "category VARCHAR(100), "
+                    "description VARCHAR(500), "
+                    "enrollDate DATE);");
+
+        mModel = new QSqlTableModel(this, ohcDB);
+        mModel->setTable("merchandise");
+        mModel->select();
+
+        mModel->setHeaderData(0, Qt::Horizontal, tr("MID"));
+        mModel->setHeaderData(1, Qt::Horizontal, tr("PNAME"));
+        mModel->setHeaderData(2, Qt::Horizontal, tr("PRICE"));
+        mModel->setHeaderData(3, Qt::Horizontal, tr("QUANTITY"));
+        mModel->setHeaderData(4, Qt::Horizontal, tr("MADEIN"));
+        mModel->setHeaderData(5, Qt::Horizontal, tr("CATEGORY"));
+        mModel->setHeaderData(6, Qt::Horizontal, tr("DESCRIPTION"));
+        mModel->setHeaderData(7, Qt::Horizontal, tr("ENROLLDATE"));
+
+    }
+
+
+
     QFile file("merchandise.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
@@ -38,7 +81,7 @@ void MerchandiseManage::dataSave()
         if(row.size()) {
             int id = row[0].toInt();
             MerchandiseList* c = new MerchandiseList(id, row[1], row[2].toInt(), row[3].toInt());
-            ui->treeWidget->addTopLevelItem(c);
+//            ui->columnView->addTopLevelItem(c);
             merchandiseList.insert(id, c);
             emit addedMerchandise(id, row[1]);
         }
@@ -165,6 +208,12 @@ void MerchandiseManage::acceptMerchandiseInfo(int key)
 }
 
 void MerchandiseManage::on_favoriteTabWidget_tabBarClicked(int index)
+{
+
+}
+
+
+void MerchandiseManage::on_columnView_clicked(QModelIndex &index)
 {
 
 }

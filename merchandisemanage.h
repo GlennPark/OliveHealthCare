@@ -8,6 +8,9 @@ class MerchandiseList;
 class QMenu;
 class QTreeWidgetItem;
 
+class QSqlDatabase;
+class QSqlTableModel;
+
 namespace Ui {
 class MerchandiseManage;
 }
@@ -33,6 +36,8 @@ private slots:
 
     void on_favoriteTabWidget_tabBarClicked(int index);
 
+    void on_columnView_clicked(QModelIndex &index);
+
 signals:
     void addMerchasdise(int, QString);
     void addedMerchandise(int, QString);
@@ -40,8 +45,8 @@ signals:
 
 
 private:
-    int makeid();
-
+    int makeMid();
+    QSqlTableModel *mModel;
     QMap<int, MerchandiseList*> merchandiseList;
     Ui::MerchandiseManage *ui;
     QMenu* menu;

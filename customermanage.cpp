@@ -42,7 +42,6 @@ CustomerManage::CustomerManage(QWidget* parent)
 
 void CustomerManage::dataSave()
 {
-
     // DB 셋업
     QSqlDatabase ohcDB = QSqlDatabase::addDatabase("QSQLITE","customerConnection");
     ohcDB.setDatabaseName("customerDatabase.db");
