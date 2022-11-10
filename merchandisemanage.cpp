@@ -22,7 +22,7 @@ MerchandiseManage::MerchandiseManage(QWidget* parent)
 
     QList<int> size;
     size << 600 << 600;
-//    ui->splitter->setSizes(size);
+    //    ui->splitter->setSizes(size);
 
     QAction* removeAction = new QAction(tr("&Remove"));
     connect(removeAction, SIGNAL(triggered()), this, SLOT(removeItem()));
@@ -44,10 +44,10 @@ void MerchandiseManage::dataSave()
     {
         QSqlQuery mQuery(ohcDB);
         mQuery.exec("CREATE TABLE IF NOT EXISTS merchandise"
-                    "(pid INTEGER PRIMARY KEY,"
-                    "pname VARCHAR(20), "
-                    "price VARCHAR(100), "
-                    "quantity VARCHAR(100), "
+                    "(pid INTEGER PRIMARY KEY, "
+                    "mname VARCHAR(20), "
+                    "price VARCHAR(50), "
+                    "quantity INTEGER, "
                     "madein VARCHAR(100), "
                     "category VARCHAR(100), "
                     "description VARCHAR(500), "
@@ -58,7 +58,7 @@ void MerchandiseManage::dataSave()
         mModel->select();
 
         mModel->setHeaderData(0, Qt::Horizontal, tr("MID"));
-        mModel->setHeaderData(1, Qt::Horizontal, tr("PNAME"));
+        mModel->setHeaderData(1, Qt::Horizontal, tr("MNAME"));
         mModel->setHeaderData(2, Qt::Horizontal, tr("PRICE"));
         mModel->setHeaderData(3, Qt::Horizontal, tr("QUANTITY"));
         mModel->setHeaderData(4, Qt::Horizontal, tr("MADEIN"));
@@ -68,18 +68,18 @@ void MerchandiseManage::dataSave()
 
     }
     ui->tableView->setModel(mModel);
-    ui->tableView->resizeColumnsToContents()
+    ui->tableView->resizeColumnsToContents();
 
     for(int i = 0; i <mModel->rowCount(); i++)
     {
         int Mid = mModel->data(mModel->index(i, 0)).toInt();
-        QString pname = mModel->data(mModel->index(i, 1)).toString();
+        QString mname = mModel->data(mModel->index(i, 1)).toString();
         QString price = mModel->data(mModel->index(i, 2)).toString();
-        QString quantity = mModel->data(mModel->index(i, 3)).toString();
+        int quantity = mModel->data(mModel->index(i, 3)).toInt();
         QString madein = mModel->data(mModel->index(i, 4)).toString();
         QString category = mModel->data(mModel->index(i, 5)).toString();
         QString description = mModel->data(mModel->index(i, 6)).toString();
-        QString enrolldate = mModel->data(mModel->index(i, 7)).toString();
+        QString enrollDate = mModel->data(mModel->index(i, 7)).toString();
 
         emit addedMerchandise(Mid);
     }
@@ -90,133 +90,199 @@ void MerchandiseManage::dataSave()
 void MerchandiseManage::on_addPushButton_clicked()
 {
     int Mid = makeMid( );
-    QString pname, price, quantity, madein, category, description, enrolldate;
+    QString mname, price, madein, category, description, enrollDate;
+    int quantity;
 
-    ui->idLineEdit->setText(QString::number(id));
-
-    name = ui->nameLineEdit->text();
-    price = ui->priceLineEdit->text().toInt();
+    ui->idLineEdit->setText(QString::number(Mid));
+    mname = ui->nameLineEdit->text();
+    price = ui->priceLineEdit->text();
     quantity = ui->quantitySpinBox->value();
-    if(name.length()) {
-        MerchandiseList* c = new MerchandiseList(id, name, price, quantity);
-        ui->treeWidget->addTopLevelItem(c);
-        merchandiseList.insert(id, c);
-        emit addedMerchandise(id, name);
+    madein = ui->madeinComboBox->currentText();
+    category = ui->categoryComboBox->currentText();
+    description = ui->textEdit->toPlainText();
+    enrollDate = ui->dateEdit->dateTime().toString();
+
+    QSqlDatabase ohcDB = QSqlDatabase::database("merchandiseConnection");
+
+    if(ohcDB.isOpen() && mname.length())
+    {
+        QSqlQuery mQuery(mModel->database());
+
+        mQuery.exec();
+        mModel->select();
+        ui->tableView->resizeColumnsToContents();
+        emit addedMerchandise(Mid);
     }
 }
 
 void MerchandiseManage::on_modifyPushButton_clicked()
 {
-    QTreeWidgetItem* item = ui->treeWidget->currentItem();
-    if(item != nullptr) {
-        int key = item->text(0).toInt();
-        MerchandiseList* c = merchandiseList[key];
-        QString name;
-        int price, quantity;
-        name = ui->nameLineEdit->text();
-        price = ui->priceLineEdit->text().toInt();
+
+    QModelIndex modelIndex = ui->tableView->currentIndex();
+    if(modelIndex.isValid())
+    {
+        //       int Cid=cModel->data(modelIndex.siblingAtColumn(0)).toInt();
+        QString mname, price, madein, category, description, enrollDate;
+        int quantity;
+
+        mname = ui->nameLineEdit->text();
+        price = ui->priceLineEdit->text();
         quantity = ui->quantitySpinBox->value();
-        c->setName(name);
-        c->setPrice(price);
-        c->setQuantity(quantity);
-        merchandiseList[key] = c;
+        madein = ui->madeinComboBox->currentText();
+        category = ui->categoryComboBox->currentText();
+        description = ui->textEdit->toPlainText();
+        enrollDate = ui->dateEdit->dateTime().toString();
+
+#if 1
+        //        mModel->setData(modelIndex.siblingAtColumn(0), Mid);
+        mModel->setData(modelIndex.siblingAtColumn(1), mname);
+        mModel->setData(modelIndex.siblingAtColumn(2), price);
+        mModel->setData(modelIndex.siblingAtColumn(3), quantity);
+        mModel->setData(modelIndex.siblingAtColumn(4), madein);
+        mModel->setData(modelIndex.siblingAtColumn(5), category);
+        mModel->setData(modelIndex.siblingAtColumn(6), description);
+        mModel->setData(modelIndex.siblingAtColumn(7), enrollDate);
+
+
+#else
+        QSqlQuery mQuery(mModel->database());
+        mQuery.prepare("UPDATE merchandise SET mname = s, price = ?, quantity = ?, domain = ?, address = ?, favorite = ?, age = ?, gender = ?, joinDate = ? WHERE Cid = ?");
+
+        mQuery.bindValue(0, mname);
+        mQuery.bindValue(1, price);
+        mQuery.bindValue(2, quantity);
+        mQuery.bindValue(3, madein);
+        mQuery.bindValue(4, category);
+        cQuery.bindValue(5, description);
+        mQuery.bindValue(6, enrollDate);
+        mQuery.bindValue(7, Mid);
+        cQuery.exec();
+#endif
+        mModel->select();
+        ui->tableView->resizeColumnsToContents();
+
     }
-}
-
-
-
-int MerchandiseManage::makeid( )
-{
-    if(merchandiseList.size( ) == 0) {
-        return 200;
-    } else {
-        auto id = merchandiseList.lastKey();
-        return ++id;
-    }
-}
-
-void MerchandiseManage::removeItem()
-{
-    QTreeWidgetItem* item = ui->treeWidget->currentItem();
-    if(item != nullptr) {
-        merchandiseList.remove(item->text(0).toInt());
-        ui->treeWidget->takeTopLevelItem(ui->treeWidget->indexOfTopLevelItem(item));
-//        delete item;
-        ui->treeWidget->update();
-    }
-}
-
-
-
-void MerchandiseManage::on_treeWidget_customContextMenuRequested(const QPoint &pos)
-{
-    QPoint globalPos = ui->treeWidget->mapToGlobal(pos);
-    menu->exec(globalPos);
 }
 
 void MerchandiseManage::on_searchPushButton_clicked()
 {
     ui->searchTreeWidget->clear();
-//    for(int i = 0; i < ui->treeWidget->columnCount(); i++)
+    //    for(int i = 0; i < ui->tableView->columnCount(); i++)
     int i = ui->searchComboBox->currentIndex();
     auto flag = (i)? Qt::MatchCaseSensitive|Qt::MatchContains
                    : Qt::MatchCaseSensitive;
     {
-        auto items = ui->treeWidget->findItems(ui->searchLineEdit->text(), flag, i);
-        foreach(auto i, items) {
-            MerchandiseList* c = static_cast<MerchandiseList*>(i);
-            int id = c->id();
-            QString name = c->getName();
-            int price = c->getPrice();
-            int quantity = c->getQuantity();
+        QModelIndexList indexList = mModel->match(mModel->index(0, i),
+                                                  Qt::EditRole, ui->searchLineEdit->text(), -1, Qt::MatchFlags(flag));
 
-            MerchandiseList* item = new MerchandiseList(id, name, price, quantity);
-            ui->searchTreeWidget->addTopLevelItem(item);
+        foreach(auto k, indexList)
+        {
+            int Mid = mModel->data(k.siblingAtColumn(0)).toInt();
+            QString mname = mModel->data(k.siblingAtColumn(1)).toString();
+            QString price = mModel->data(k.siblingAtColumn(2)).toString();
+            int quantity = mModel->data(k.siblingAtColumn(3)).toInt();
+            QString madein = mModel->data(k.siblingAtColumn(4)).toString();
+            QString category = mModel->data(k.siblingAtColumn(5)).toString();
+            QString description = mModel->data(k.siblingAtColumn(6)).toString();
+            QString enrollDate = mModel->data(k.siblingAtColumn(7)).toString();
+
+            QStringList stringList;
+            stringList << QString::number(Mid) << mname << price << QString::number(quantity) << madein << category << description << enrollDate;
+            new QTreeWidgetItem(ui->searchTreeWidget, stringList);
+            for(int i = 0; i < ui->searchTreeWidget->columnCount(); i++)
+                ui->searchTreeWidget->resizeColumnToContents(i);
         }
     }
 }
 
-void MerchandiseManage::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column)
+int MerchandiseManage::makeMid( )
 {
-    Q_UNUSED(column);
-    ui->idLineEdit->setText(item->text(0));
-    ui->nameLineEdit->setText(item->text(1));
-    ui->priceLineEdit->setText(item->text(2));
-    ui->quantitySpinBox->setValue(item->text(3).toInt());
-//    ui->toolBox->setCurrentIndex(0);
+    if(merchandiseList.size( ) == 0) {
+        return 3000;
+    } else {
+        auto Mid = mModel->data(mModel->index(mModel->rowCount()-1, 0)).toInt();
+        return ++Mid;
+    }
+}
+
+void MerchandiseManage::removeItem()
+{
+    QModelIndex modelIndex = ui->tableView->currentIndex();
+    if(modelIndex.isValid())
+    {
+        mModel->removeRow(modelIndex.row());
+        mModel->select();
+        ui->tableView->resizeColumnsToContents();
+    }
+}
+
+void MerchandiseManage::on_tableView_customContextMenuRequested(const QPoint &pos)
+{
+    QPoint globalPos = ui->tableView->mapToGlobal(pos);
+    menu->exec(globalPos);
+}
+
+void MerchandiseManage::showContextMenu(const QPoint &pos)
+{
+    QPoint globalPos = ui->tableView->mapToGlobal(pos);
+    if(ui->tableView->indexAt(pos).isValid())
+        menu->exec(globalPos);
 }
 
 void MerchandiseManage::acceptMerchandiseInfo(int key)
 {
-    MerchandiseList* p = merchandiseList[key];
-    emit sendMerchandiseInfo(p->getName(), p->getPrice(), p->getQuantity());
+    QModelIndexList indexList =
+            mModel->match(mModel->index(0, 0), Qt::EditRole, key, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
+
+    foreach(auto k, indexList)
+    {
+        //       int Mid = mModel->data(k.siblingAtColumn(0)).toInt();
+        QString mname = mModel->data(k.siblingAtColumn(1)).toString();
+        QString price = mModel->data(k.siblingAtColumn(2)).toString();
+        int quantity = mModel->data(k.siblingAtColumn(3)).toInt();
+        QString madein = mModel->data(k.siblingAtColumn(4)).toString();
+        QString category = mModel->data(k.siblingAtColumn(5)).toString();
+        QString description = mModel->data(k.siblingAtColumn(6)).toString();
+        QString enrollDate = mModel->data(k.siblingAtColumn(7)).toString();
+
+        emit sendMerchandiseInfo(mname, price, quantity, madein, category, description, enrollDate);
+
+    }
 }
 
-void MerchandiseManage::on_favoriteTabWidget_tabBarClicked(int index)
+void MerchandiseManage::on_tableView_clicked(const QModelIndex &index)
 {
+    QString Mid = mModel->data(index.siblingAtColumn(0)).toString();
+    QString mname = mModel->data(index.siblingAtColumn(1)).toString();
+    QString price = mModel->data(index.siblingAtColumn(2)).toString();
+    int quantity = mModel->data(index.siblingAtColumn(3)).toInt();
+    QString madein = mModel->data(index.siblingAtColumn(4)).toString();
+    QString category = mModel->data(index.siblingAtColumn(5)).toString();
+    QString description = mModel->data(index.siblingAtColumn(6)).toString();
+    QDate enrollDate = mModel->data(index.siblingAtColumn(7)).toDate();
 
+
+    ui->idLineEdit->setText(Mid);
+    ui->nameLineEdit->setText(mname);
+    ui->priceLineEdit->setText(price);
+    ui->quantitySpinBox->setValue(quantity);
+    ui->madeinComboBox->setCurrentText(madein);
+    ui->categoryComboBox->setCurrentText(category);
+    ui->textEdit->setText(description);
+    ui->dateEdit->setDate(enrollDate);
 }
 
-
-void MerchandiseManage::on_columnView_clicked(QModelIndex &index)
-{
-
-}
 
 MerchandiseManage::~MerchandiseManage()
 {
     delete ui;
 
-    QFile file("merchandise.txt");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-        return;
+    QSqlDatabase database = QSqlDatabase::database("merchandiseConnection");
 
-    QTextStream out(&file);
-    for (const auto& v : merchandiseList) {
-        MerchandiseList* c = v;
-        out << c->id() << ", " << c->getName() << ", ";
-        out << c->getPrice() << ", ";
-        out << c->getQuantity() << "\n";
+    if(database.isOpen())
+    {
+        mModel->submitAll();
+        database.commit();
+        database.close();
     }
-    file.close( );
 }

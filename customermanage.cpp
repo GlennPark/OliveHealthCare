@@ -110,7 +110,6 @@ void CustomerManage::on_addPushButton_clicked()
     QString name, phoneNumber, email, domain, address, favorite, gender, joinDate;
     int age;
 
-
     ui->idLineEdit->setText(QString::number(Cid));
     name = ui->nameLineEdit->text();
     phoneNumber = ui->phoneNumberLineEdit->text();
@@ -129,7 +128,7 @@ void CustomerManage::on_addPushButton_clicked()
         gender = ui->femaleButton->text();
     }
 
-    joinDate = ui->dateEdit->dateTime().toString();
+    joinDate = ui->dateEdit->date().toString();
 
     QSqlDatabase ohcDB = QSqlDatabase::database("customerConnection");
     if(ohcDB.isOpen() && name.length())
@@ -153,6 +152,68 @@ void CustomerManage::on_addPushButton_clicked()
     }
 }
 
+void CustomerManage::on_modifyPushButton_clicked()
+{
+
+    QModelIndex modelIndex = ui->tableView->currentIndex();
+    if(modelIndex.isValid())
+    {
+        //       int Cid=cModel->data(modelIndex.siblingAtColumn(0)).toInt();
+        QString name, phoneNumber, email, domain, address, favorite, gender, joinDate;
+        int age;
+
+        name = ui->nameLineEdit->text();
+        phoneNumber = ui->phoneNumberLineEdit->text();
+        email = ui->emailLineEdit->text();
+        domain = ui->domainComboBox->currentText();
+        favorite = ui->favoriteComboBox->currentText();
+        address = ui->addressLineEdit->text();
+        age = ui->ageSpinBox->value();
+
+        if(ui->maleButton->isChecked())
+        {
+            gender = ui->maleButton->text();
+        }
+        else
+        {
+            gender = ui->femaleButton->text();
+        }
+
+        joinDate = ui->dateEdit->date().toString();
+#if 1
+        //        cModel->setData(modelIndex.siblingAtColumn(0), Cid);
+        cModel->setData(modelIndex.siblingAtColumn(1), name);
+        cModel->setData(modelIndex.siblingAtColumn(2), phoneNumber);
+        cModel->setData(modelIndex.siblingAtColumn(3), email);
+        cModel->setData(modelIndex.siblingAtColumn(4), domain);
+        cModel->setData(modelIndex.siblingAtColumn(5), address);
+        cModel->setData(modelIndex.siblingAtColumn(6), favorite);
+        cModel->setData(modelIndex.siblingAtColumn(7), age);
+        cModel->setData(modelIndex.siblingAtColumn(8), gender);
+        cModel->setData(modelIndex.siblingAtColumn(9), joinDate);
+        cModel->submit();
+
+#else
+        QSqlQuery cQuery(cModel->database());
+        cQuery.prepare("UPDATE customer SET name = ?, phoneNumber = ?, email = ?, domain = ?, address = ?, favorite = ?, age = ?, gender = ?, joinDate = ? WHERE Cid = ?");
+
+        cQuery.bindValue(0, name);
+        cQuery.bindValue(1, phoneNumber);
+        cQuery.bindValue(2, email);
+        cQuery.bindValue(3, domain);
+        cQuery.bindValue(4, address);
+        cQuery.bindValue(5, favorite);
+        cQuery.bindValue(6, age);
+        cQuery.bindValue(7, gender);
+        cQuery.bindValue(8, joinDate);
+        cQuery.bindValue(9, Cid);
+        cQuery.exec();
+#endif
+        cModel->select();
+        ui->tableView->resizeColumnsToContents();
+
+    }
+}
 
 void CustomerManage::on_searchPushButton_clicked()
 {
@@ -191,7 +252,7 @@ int CustomerManage::makeCid( )
 {
     if(cModel->rowCount() == 0)
     {
-        return 100;
+        return 1000;
     }
     else
     {
@@ -212,77 +273,18 @@ void CustomerManage::removeItem()
     }
 }
 
+void CustomerManage::on_tableView_customContextMenuRequested(const QPoint &pos)
+{
+    QPoint globalPos = ui->tableView->mapToGlobal(pos);
+    menu->exec(globalPos);
+}
+
 void CustomerManage::showContextMenu(const QPoint &pos)
 {
     QPoint globalPos = ui->tableView->mapToGlobal(pos);
     if(ui->tableView->indexAt(pos).isValid())
         menu->exec(globalPos);
 }
-
-
-void CustomerManage::on_modifyPushButton_clicked()
-{
-
-    QModelIndex modelIndex = ui->tableView->currentIndex();
-    if(modelIndex.isValid())
-    {
- //       int Cid=cModel->data(modelIndex.siblingAtColumn(0)).toInt();
-        QString name, phoneNumber, email, domain, address, favorite, gender, joinDate;
-        int age;
-
-        name = ui->nameLineEdit->text();
-        phoneNumber = ui->phoneNumberLineEdit->text();
-        email = ui->emailLineEdit->text();
-        domain = ui->domainComboBox->currentText();
-        favorite = ui->favoriteComboBox->currentText();
-        address = ui->addressLineEdit->text();
-        age = ui->ageSpinBox->value();
-
-        if(ui->maleButton->isChecked())
-        {
-            gender = ui->maleButton->text();
-        }
-        else
-        {
-            gender = ui->femaleButton->text();
-        }
-
-        joinDate = ui->dateEdit->dateTime().toString();
-#if 1
-//        cModel->setData(modelIndex.siblingAtColumn(0), Cid);
-        cModel->setData(modelIndex.siblingAtColumn(1), name);
-        cModel->setData(modelIndex.siblingAtColumn(2), phoneNumber);
-        cModel->setData(modelIndex.siblingAtColumn(3), email);
-        cModel->setData(modelIndex.siblingAtColumn(4), domain);
-        cModel->setData(modelIndex.siblingAtColumn(5), address);
-        cModel->setData(modelIndex.siblingAtColumn(6), favorite);
-        cModel->setData(modelIndex.siblingAtColumn(7), age);
-        cModel->setData(modelIndex.siblingAtColumn(8), gender);
-        cModel->setData(modelIndex.siblingAtColumn(9), joinDate);
-        cModel->submit();
-
-#else
-        QSqlQuery cQuery(cModel->database());
-        cQuery.prepare("UPDATE customer SET name = ?, phoneNumber = ?, email = ?, domain = ?, address = ?, favorite = ?, age = ?, gender = ?, joinDate = ? WHERE Cid = ?");
-
-        cQuery.bindValue(0, name);
-        cQuery.bindValue(1, phoneNumber);
-        cQuery.bindValue(2, email);
-        cQuery.bindValue(3, domain);
-        cQuery.bindValue(4, address);
-        cQuery.bindValue(5, favorite);
-        cQuery.bindValue(6, age);
-        cQuery.bindValue(7, gender);
-        cQuery.bindValue(8, joinDate);
-        cQuery.bindValue(9, Cid);
-        cQuery.exec();
-#endif
-        cModel->select();
-        ui->tableView->resizeColumnsToContents();
-
-    }
-}
-
 
 void CustomerManage::acceptCustomerInfo(int key)
 {
@@ -292,7 +294,7 @@ void CustomerManage::acceptCustomerInfo(int key)
 
     foreach(auto k, indexList)
     {
- //       int Cid = cModel->data(k.siblingAtColumn(0)).toInt();
+        //       int Cid = cModel->data(k.siblingAtColumn(0)).toInt();
         QString name = cModel->data(k.siblingAtColumn(1)).toString();
         QString phoneNumber = cModel->data(k.siblingAtColumn(2)).toString();
         QString email = cModel->data(k.siblingAtColumn(3)).toString();
@@ -303,34 +305,44 @@ void CustomerManage::acceptCustomerInfo(int key)
         QString gender = cModel->data(k.siblingAtColumn(8)).toString();
         QString joinDate = cModel->data(k.siblingAtColumn(9)).toString();
 
-    emit sendCustomerInfo(name, phoneNumber, email, domain, address, favorite, age, gender, joinDate);
+        emit sendCustomerInfo(name, phoneNumber, email, domain, address, favorite, age, gender, joinDate);
 
     }
 }
 
-
-
-void CustomerManage::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
+void CustomerManage::on_tableView_clicked(const QModelIndex &index)
 {
-    Q_UNUSED(column);
-    ui->idLineEdit->setText(item->text(0));
-    ui->nameLineEdit->setText(item->text(1));
-    ui->phoneNumberLineEdit->setText(item->text(2));
-    ui->emailLineEdit->setText(item->text(3));
-    ui->domainComboBox->currentText();
-    ui->addressLineEdit->setText(item->text(5));
-    ui->favoriteComboBox->currentText();
-    ui->ageSpinBox->text();
+    QString Cid = cModel->data(index.siblingAtColumn(0)).toString();
+    QString name = cModel->data(index.siblingAtColumn(1)).toString();
+    QString phoneNumber = cModel->data(index.siblingAtColumn(2)).toString();
+    QString email = cModel->data(index.siblingAtColumn(3)).toString();
+    QString domain = cModel->data(index.siblingAtColumn(4)).toString();
+    QString address = cModel->data(index.siblingAtColumn(5)).toString();
+    QString favorite = cModel->data(index.siblingAtColumn(6)).toString();
+    int age = cModel->data(index.siblingAtColumn(7)).toInt();
+    QString gender = cModel->data(index.siblingAtColumn(8)).toString();
+    QString joinDate = cModel->data(index.siblingAtColumn(9)).toString();
+
+    ui->idLineEdit->setText(Cid);
+    ui->nameLineEdit->setText(name);
+    ui->phoneNumberLineEdit->setText(phoneNumber);
+    ui->emailLineEdit->setText(email);
+    ui->domainComboBox->setCurrentText(domain);
+    ui->addressLineEdit->setText(address);
+    ui->favoriteComboBox->setCurrentText(domain);
+    ui->ageSpinBox->setValue(age);
+
     if(ui->maleButton->isChecked())
     {
-        ui->maleButton->text();
+        gender = ui->maleButton->setText(const QString);
     }
     else
     {
-        ui->femaleButton->text();
+        gender = ui->femaleButton->setText(const QString);
     }
-}
 
+    ui->addressLineEdit->setText(email);
+}
 
 CustomerManage::~CustomerManage()
 {

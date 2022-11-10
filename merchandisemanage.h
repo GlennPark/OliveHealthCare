@@ -24,24 +24,22 @@ public:
     void dataSave();
 
 private slots:
+    void on_tableView_customContextMenuRequested(const QPoint &pos);
+    void showContextMenu(const QPoint &);
+
     void on_addPushButton_clicked();
     void on_modifyPushButton_clicked();
-    void on_treeWidget_customContextMenuRequested(const QPoint &pos);
     void on_searchPushButton_clicked();
-    void on_treeWidget_itemClicked(QTreeWidgetItem* item, int column);
+    void on_tableView_clicked(const QModelIndex &index);
 
     /* QTreeWidget을 위한 슬롯 */
     void removeItem();              /* QAction을 위한 슬롯 */
     void acceptMerchandiseInfo(int);
 
-    void on_favoriteTabWidget_tabBarClicked(int index);
-
-    void on_columnView_clicked(QModelIndex &index);
-
 signals:
     void addMerchasdise(int);
     void addedMerchandise(int);
-    void sendMerchandiseInfo(QString, QString, QString, QString, QString, QString);
+    void sendMerchandiseInfo(QString, QString, int, QString, QString, QString, QString);
 
 
 private:
