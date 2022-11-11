@@ -44,7 +44,7 @@ void MerchandiseManage::dataSave()
     {
         QSqlQuery mQuery(ohcDB);
         mQuery.exec("CREATE TABLE IF NOT EXISTS merchandise"
-                    "(pid INTEGER PRIMARY KEY, "
+                    "(mid INTEGER PRIMARY KEY, "
                     "mname VARCHAR(20), "
                     "price VARCHAR(50), "
                     "quantity INTEGER, "
@@ -107,6 +107,15 @@ void MerchandiseManage::on_addPushButton_clicked()
     if(ohcDB.isOpen() && mname.length())
     {
         QSqlQuery mQuery(mModel->database());
+        mQuery.prepare("INSERT INTO merchandise VALUES (?, ?, ?, ?, ?, ?, ?, ?,)");
+        mQuery.bindValue(0, Mid);
+        mQuery.bindValue(1, mname);
+        mQuery.bindValue(2, price);
+        mQuery.bindValue(3, quantity);
+        mQuery.bindValue(4, madein);
+        mQuery.bindValue(5, category);
+        mQuery.bindValue(6, description);
+        mQuery.bindValue(7, enrollDate);
 
         mQuery.exec();
         mModel->select();
@@ -142,7 +151,7 @@ void MerchandiseManage::on_modifyPushButton_clicked()
         mModel->setData(modelIndex.siblingAtColumn(5), category);
         mModel->setData(modelIndex.siblingAtColumn(6), description);
         mModel->setData(modelIndex.siblingAtColumn(7), enrollDate);
-
+        mModel->submit();
 
 #else
         QSqlQuery mQuery(mModel->database());
@@ -153,10 +162,10 @@ void MerchandiseManage::on_modifyPushButton_clicked()
         mQuery.bindValue(2, quantity);
         mQuery.bindValue(3, madein);
         mQuery.bindValue(4, category);
-        cQuery.bindValue(5, description);
+        mQuery.bindValue(5, description);
         mQuery.bindValue(6, enrollDate);
         mQuery.bindValue(7, Mid);
-        cQuery.exec();
+        mQuery.exec();
 #endif
         mModel->select();
         ui->tableView->resizeColumnsToContents();
@@ -197,9 +206,11 @@ void MerchandiseManage::on_searchPushButton_clicked()
 
 int MerchandiseManage::makeMid( )
 {
-    if(merchandiseList.size( ) == 0) {
+    if(mModel->rowCount() == 0) {
         return 3000;
-    } else {
+    }
+    else
+    {
         auto Mid = mModel->data(mModel->index(mModel->rowCount()-1, 0)).toInt();
         return ++Mid;
     }

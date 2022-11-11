@@ -103,9 +103,6 @@ void CustomerManage::dataSave()
 //고객 등록
 void CustomerManage::on_addPushButton_clicked()
 {
-
-
-
     int Cid = makeCid();
     QString name, phoneNumber, email, domain, address, favorite, gender, joinDate;
     int age;
@@ -131,6 +128,7 @@ void CustomerManage::on_addPushButton_clicked()
     joinDate = ui->dateEdit->date().toString();
 
     QSqlDatabase ohcDB = QSqlDatabase::database("customerConnection");
+
     if(ohcDB.isOpen() && name.length())
     {
         QSqlQuery cQuery(cModel->database());
@@ -145,6 +143,7 @@ void CustomerManage::on_addPushButton_clicked()
         cQuery.bindValue(7, age);
         cQuery.bindValue(8, gender);
         cQuery.bindValue(9, joinDate);
+
         cQuery.exec();
         cModel->select();
         ui->tableView->resizeColumnsToContents();
@@ -331,17 +330,18 @@ void CustomerManage::on_tableView_clicked(const QModelIndex &index)
     ui->addressLineEdit->setText(address);
     ui->favoriteComboBox->setCurrentText(domain);
     ui->ageSpinBox->setValue(age);
+    ui->maleButton->setText(gender);
+    ui->femaleButton->setText(gender);
 
-    if(ui->maleButton->isChecked())
-    {
-        gender = ui->maleButton->setText(const QString);
-    }
-    else
-    {
-        gender = ui->femaleButton->setText(const QString);
-    }
+//    if(ui->maleButton->isChecked())
+//    {
+//        ui->maleButton->setText(gender);
+//    }
+//    else
+//    {
+//        ui->femaleButton->setText(gender);
+//    }
 
-    ui->addressLineEdit->setText(email);
 }
 
 CustomerManage::~CustomerManage()
