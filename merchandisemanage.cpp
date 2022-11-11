@@ -100,14 +100,14 @@ void MerchandiseManage::on_addPushButton_clicked()
     madein = ui->madeinComboBox->currentText();
     category = ui->categoryComboBox->currentText();
     description = ui->textEdit->toPlainText();
-    enrollDate = ui->dateEdit->dateTime().toString();
+    enrollDate = ui->dateEdit->date().toString();
 
     QSqlDatabase ohcDB = QSqlDatabase::database("merchandiseConnection");
 
     if(ohcDB.isOpen() && mname.length())
     {
         QSqlQuery mQuery(mModel->database());
-        mQuery.prepare("INSERT INTO merchandise VALUES (?, ?, ?, ?, ?, ?, ?, ?,)");
+        mQuery.prepare("INSERT INTO merchandise VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         mQuery.bindValue(0, Mid);
         mQuery.bindValue(1, mname);
         mQuery.bindValue(2, price);
@@ -140,7 +140,7 @@ void MerchandiseManage::on_modifyPushButton_clicked()
         madein = ui->madeinComboBox->currentText();
         category = ui->categoryComboBox->currentText();
         description = ui->textEdit->toPlainText();
-        enrollDate = ui->dateEdit->dateTime().toString();
+        enrollDate = ui->dateEdit->date().toString();
 
 #if 1
         //        mModel->setData(modelIndex.siblingAtColumn(0), Mid);
