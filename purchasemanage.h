@@ -2,10 +2,14 @@
 #define PURCHASEMANAGE_H
 
 #include <QWidget>
+#include <QHash>
 
 class PurchaseList;
-class QMenu;
 class QTreeWidgetItem;
+class QMenu;
+
+class QSqlDatabase;
+class QSqlTableModel;
 
 namespace Ui {
 class PurchaseManage;
@@ -20,17 +24,24 @@ public:
 
     void dataSave();
 
-private:
-    int makePid();
-    Ui::PurchaseManage *ui;
-    QList<int> CidList;
-    QList<int> MidList;
-    QMap<int, PurchaseList*> purchaseList;
-    QMenu* menu;
+private slots:
+    void on_tableView_customContextMenuRequested(const QPoint &pos);
+    void showContextMenu(const QPoint &);
+
+    void on_customerComboBox_currentIndexChanged(int index);
+    void on_merchandiseComboBox_currentIndexChanged(int index);
+    void on_quantitySpinBox_valueChanged(int arg1);
+    void on_treeWidget_customContextMenuRequested(const QPoint &pos);
+    void on_treeWidget_itemClicked(QTreeWidgetItem* item, int column);
+    void on_addPushButton_clicked();
+    void on_modifyPushButton_clicked();
+    void on_searchPushButton_clicked();
+
+
 
 public slots:
     void addCustomer(int);
-    void addMerchandise(int, QString);
+    void addMerchandise(int);
     void getCustomerInfo(QString, QString, QString);     // 응답
     void getMerchandiseInfo(QString, int, int);     // 응답
 
@@ -41,15 +52,14 @@ signals:
     void getCustomerInfo(int);            // 요청
     void getMerchandiseInfo(int);           // 요청
 
-private slots:
-    void on_customerComboBox_currentIndexChanged(int index);
-    void on_merchandiseComboBox_currentIndexChanged(int index);
-    void on_quantitySpinBox_valueChanged(int arg1);
-    void on_treeWidget_customContextMenuRequested(const QPoint &pos);
-    void on_treeWidget_itemClicked(QTreeWidgetItem* item, int column);
-    void on_addPushButton_clicked();
-    void on_modifyPushButton_clicked();
-    void on_searchPushButton_clicked();
+private:
+    int makePid();
+    QSqlTableModel *pModel;
+    Ui::PurchaseManage *ui;
+    QList<int> CidList;
+    QList<int> MidList;
+    QMap<int, PurchaseList*> purchaseList;
+    QMenu* menu;
 };
 
 

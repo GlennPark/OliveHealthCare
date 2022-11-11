@@ -10,7 +10,6 @@
 
 class CustomerList;
 class QTreeWidgetItem;
-
 class QMenu;
 
 class QSqlDatabase;

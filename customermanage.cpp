@@ -19,12 +19,6 @@ CustomerManage::CustomerManage(QWidget* parent)
 {
     ui->setupUi(this);
 
-
-    //    QList<int> size;
-    //    size << 600 << 600;
-    //    ui->splitter->setSizes(size);
-
-
     QAction* removeAction = new QAction(tr("&Remove"));
     connect(removeAction, SIGNAL(triggered()), this, SLOT(removeItem()));
     menu = new QMenu;

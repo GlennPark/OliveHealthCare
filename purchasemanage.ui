@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Order Info</string>
   </property>
-  <widget class="QTreeWidget" name="treeWidget">
+  <widget class="QTableView" name="tableView">
    <property name="geometry">
     <rect>
      <x>160</x>
@@ -28,39 +28,6 @@
    <property name="frameShadow">
     <enum>QFrame::Plain</enum>
    </property>
-   <property name="rootIsDecorated">
-    <bool>false</bool>
-   </property>
-   <column>
-    <property name="text">
-     <string>Order Number</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Client Name</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Product Name</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string># Price</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Quantity</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Total Price</string>
-    </property>
-   </column>
   </widget>
   <widget class="QPushButton" name="addPushButton">
    <property name="geometry">
