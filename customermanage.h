@@ -15,7 +15,6 @@ class QMenu;
 class QSqlDatabase;
 class QSqlTableModel;
 
-
 namespace Ui {
 class CustomerManage;
 }

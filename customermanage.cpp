@@ -100,8 +100,8 @@ void CustomerManage::on_addPushButton_clicked()
     int Cid = makeCid();
     QString name, phoneNumber, email, domain, address, favorite, gender, joinDate;
     int age;
-
     ui->idLineEdit->setText(QString::number(Cid));
+
     name = ui->nameLineEdit->text();
     phoneNumber = ui->phoneNumberLineEdit->text();
     email = ui->emailLineEdit->text();
@@ -314,7 +314,7 @@ void CustomerManage::on_tableView_clicked(const QModelIndex &index)
     QString favorite = cModel->data(index.siblingAtColumn(6)).toString();
     int age = cModel->data(index.siblingAtColumn(7)).toInt();
     QString gender = cModel->data(index.siblingAtColumn(8)).toString();
-    QString joinDate = cModel->data(index.siblingAtColumn(9)).toString();
+    QDate joinDate = cModel->data(index.siblingAtColumn(9)).toDate();
 
     ui->idLineEdit->setText(Cid);
     ui->nameLineEdit->setText(name);
@@ -326,7 +326,7 @@ void CustomerManage::on_tableView_clicked(const QModelIndex &index)
     ui->ageSpinBox->setValue(age);
     ui->maleButton->setText(gender);
     ui->femaleButton->setText(gender);
-
+    ui->dateEdit->setDate(joinDate);
 //    if(ui->maleButton->isChecked())
 //    {
 //        ui->maleButton->setText(gender);

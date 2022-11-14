@@ -37,7 +37,7 @@ private slots:
     void acceptMerchandiseInfo(int);
 
 signals:
-    void addMerchasdise(int);
+//    void addMerchasdise(int);
     void addedMerchandise(int);
     void sendMerchandiseInfo(QString, QString, int, QString, QString, QString, QString);
 
