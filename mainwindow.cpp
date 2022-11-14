@@ -94,12 +94,12 @@ MainWindow::MainWindow(QWidget *parent)
     chattingClient->showMaximized();
 
     connect(customerManage, SIGNAL(destroyed()),customerManage, SLOT(deleteLater()));
-    connect(customerManage, SIGNAL(addedCustomer(int, QString)),purchaseManage, SLOT(addCustomer(int, QString)));
-    connect(customerManage, SIGNAL(sendCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString)),purchaseManage,SLOT(getCustomerInfo(QString,QString,QString)));
-    connect(customerManage, SIGNAL(addedCustomer(int, QString)),chattingServer,SLOT(addClient(int, QString)));
+    connect(customerManage, SIGNAL(addedCustomer(int)),purchaseManage, SLOT(addCustomer(int)));
+    connect(customerManage, SIGNAL(sendCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString)),purchaseManage,SLOT(acceptCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString)));
+    connect(customerManage, SIGNAL(addedCustomer(int)),chattingServer,SLOT(addCustomer(int, QString)));
 
     connect(merchandiseManage, SIGNAL(destroyed()),merchandiseManage, SLOT(deleteLater()));
-    connect(merchandiseManage, SIGNAL(addedMerchandise(int, QString)),purchaseManage, SLOT(addMerchandise(int, QString)));
+    connect(merchandiseManage, SIGNAL(addedMerchandise(int)),purchaseManage, SLOT(addMerchandise(int, QString)));
     connect(merchandiseManage, SIGNAL(sendMerchandiseInfo(QString, int, int)),purchaseManage, SLOT(getMerchandiseInfo(QString, int, int)));
 
     connect(purchaseManage, SIGNAL(destroyed()),purchaseManage, SLOT(deleteLater()));

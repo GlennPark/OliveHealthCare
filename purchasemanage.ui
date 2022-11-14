@@ -65,7 +65,7 @@
     <string>&amp;Customer</string>
    </property>
    <property name="buddy">
-    <cstring>customerComboBox</cstring>
+    <cstring>nameComboBox</cstring>
    </property>
   </widget>
   <widget class="QLineEdit" name="PidLineEdit">
@@ -113,7 +113,7 @@
     <cstring>totalPriceLineEdit</cstring>
    </property>
   </widget>
-  <widget class="QComboBox" name="customerComboBox">
+  <widget class="QComboBox" name="nameComboBox">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -171,7 +171,7 @@
     <cstring>PidLineEdit</cstring>
    </property>
   </widget>
-  <widget class="QComboBox" name="merchandiseComboBox">
+  <widget class="QComboBox" name="mnameComboBox">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -220,7 +220,7 @@
     <string>&amp;Merchandise</string>
    </property>
    <property name="buddy">
-    <cstring>merchandiseComboBox</cstring>
+    <cstring>mnameComboBox</cstring>
    </property>
   </widget>
   <widget class="QTreeWidget" name="merchandiseTreeWidget">
@@ -308,7 +308,7 @@
      <normaloff>:/images/icons8-searching-64.png</normaloff>:/images/icons8-searching-64.png</iconset>
    </property>
   </widget>
-  <widget class="QTreeWidget" name="searchTreeWidget">
+  <widget class="QTableView" name="searchTableView">
    <property name="geometry">
     <rect>
      <x>160</x>
@@ -323,39 +323,6 @@
    <property name="frameShadow">
     <enum>QFrame::Plain</enum>
    </property>
-   <property name="rootIsDecorated">
-    <bool>false</bool>
-   </property>
-   <column>
-    <property name="text">
-     <string>ID</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Client Name</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Produce Name</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string># Price</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Quantity</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Total Price</string>
-    </property>
-   </column>
   </widget>
   <widget class="QLineEdit" name="searchLineEdit">
    <property name="geometry">

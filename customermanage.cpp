@@ -219,6 +219,8 @@ void CustomerManage::on_searchPushButton_clicked()
         QModelIndexList indexList = cModel->match(cModel->index(0, i),
                                                   Qt::EditRole, ui->searchLineEdit->text(), -1, Qt::MatchFlags(flag));
 
+
+
         foreach(auto k, indexList)
         {
             int Cid = cModel->data(k.siblingAtColumn(0)).toInt();
@@ -281,10 +283,10 @@ void CustomerManage::showContextMenu(const QPoint &pos)
 
 void CustomerManage::acceptCustomerInfo(int key)
 {
-
+qDebug()<<"client accpet"<<key;
     QModelIndexList indexList =
             cModel->match(cModel->index(0, 0), Qt::EditRole, key, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
-
+qDebug()<<indexList;
     foreach(auto k, indexList)
     {
         //       int Cid = cModel->data(k.siblingAtColumn(0)).toInt();
@@ -297,8 +299,8 @@ void CustomerManage::acceptCustomerInfo(int key)
         int age = cModel->data(k.siblingAtColumn(7)).toInt();
         QString gender = cModel->data(k.siblingAtColumn(8)).toString();
         QString joinDate = cModel->data(k.siblingAtColumn(9)).toString();
-
-        emit sendCustomerInfo(name, phoneNumber, email, domain, address, favorite, age, gender, joinDate);
+qDebug()<<name;
+        emit sendCustomerInfo(name, phoneNumber, email, domain, address, favorite, gender, gender);
 
     }
 }

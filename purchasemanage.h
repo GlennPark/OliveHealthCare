@@ -10,6 +10,7 @@ class QMenu;
 
 class QSqlDatabase;
 class QSqlTableModel;
+class QStandardItemModel;
 
 namespace Ui {
 class PurchaseManage;
@@ -29,10 +30,11 @@ private slots:
     void showContextMenu(const QPoint &);
 
 
-    void on_customerComboBox_currentIndexChanged(int index);
-    void on_merchandiseComboBox_currentIndexChanged(int index);
+    void on_nameComboBox_currentIndexChanged(int index);
+    void on_mnameComboBox_currentIndexChanged(int index);
+ //   void on_merchandiseComboBox_currentIndexChanged(int index);
     void on_quantitySpinBox_valueChanged(int arg1);
-    void on_treeWidget_customContextMenuRequested(const QPoint &pos);
+ //   void on_treeWidget_customContextMenuRequested(const QPoint &pos);
     void on_tableView_clicked(const QModelIndex &index);
     void on_addPushButton_clicked();
     void on_modifyPushButton_clicked();
@@ -43,22 +45,26 @@ private slots:
 public slots:
     void addCustomer(int);
     void addMerchandise(int);
-    void addPurchase(int);
-    void addedPurchase(int);
-
+//    void addPurchase(int);
+void acceptCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString);
+void addCustomer(int, QString);
     // 응답
 
     /* QTreeWidget을 위한 슬롯 */
     void removeItem();              /* QAction을 위한 슬롯 */
 
 signals:
-    void getCustomerInfo(int);            // 요청
+   void getCustomerInfo(int);            // 요청
     void getMerchandiseInfo(int);
-    void getPurchaseInfo(int);// 요청
+    void getPurchaseInfo(int);
     void sendPurchaseInfo(QString, QString, QString, QString, int, int, int, int, QString);
+    void addedPurchase(int);
+
 private:
     int makePid();
+    QStandardItemModel *sModel;
     QSqlTableModel *pModel;
+    QStandardItemModel* clientInfoModel;
     QMap<int, PurchaseList*> purchaseList;
     Ui::PurchaseManage *ui;
     QMenu* menu;

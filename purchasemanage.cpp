@@ -12,6 +12,8 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
+#include <QStandardItemModel>
+
 PurchaseManage::PurchaseManage(QWidget *parent)
     : QWidget(parent), ui(new Ui::PurchaseManage)
 {
@@ -26,7 +28,34 @@ PurchaseManage::PurchaseManage(QWidget *parent)
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(showContextMenu(QPoint)));
     connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(on_searchPushButton_clicked()));
 
+    sModel = new QStandardItemModel(0, 8);
+    sModel->setHeaderData(0, Qt::Horizontal, tr("PID"));
+    sModel->setHeaderData(1, Qt::Horizontal, tr("CID"));
+    sModel->setHeaderData(2, Qt::Horizontal, tr("MID"));
+    sModel->setHeaderData(3, Qt::Horizontal, tr("NAME"));
+    sModel->setHeaderData(4, Qt::Horizontal, tr("PNAME"));
+    sModel->setHeaderData(5, Qt::Horizontal, tr("FAVORITE"));
+    sModel->setHeaderData(6, Qt::Horizontal, tr("CATEGORY"));
+    sModel->setHeaderData(7, Qt::Horizontal, tr("PRICE"));
+    sModel->setHeaderData(8, Qt::Horizontal, tr("QUANTITY"));
+    sModel->setHeaderData(9, Qt::Horizontal, tr("BUYAMOUNT"));
+    sModel->setHeaderData(10, Qt::Horizontal, tr("TOTALPRICE"));
+    sModel->setHeaderData(11, Qt::Horizontal, tr("SHOPDATE"));
+
+    ui->searchTableView->setModel(sModel);
+
+    clientInfoModel=new QStandardItemModel;
+    clientInfoModel->setColumnCount(2);
+    clientInfoModel->setRowCount(5);
+    QStringList ls;
+    ls<<"id"<<"phone";
+    clientInfoModel->setHorizontalHeaderLabels(ls);
+
+
+    ui->tableView->setModel(clientInfoModel);
+   ui->tableView->show();
 }
+
 void PurchaseManage::dataSave()
 {
     QSqlDatabase ohcDB = QSqlDatabase::addDatabase("QSQLITE","purchaseConnection");
@@ -103,8 +132,8 @@ void PurchaseManage::on_addPushButton_clicked()
     ui->MidLineEdit->setText(QString::number(Mid));
 
 
-    name = ui->customerComboBox->currentText();
-    mname = ui->merchandiseComboBox->currentText();
+    name = ui->nameComboBox->currentText();
+    mname = ui->mnameComboBox->currentText();
     favorite = ui->favoriteComboBox->currentText();
     category = ui->categoryComboBox->currentText();
     price = ui->priceLineEdit->text().toInt();
@@ -115,10 +144,27 @@ void PurchaseManage::on_addPushButton_clicked()
 
     QSqlDatabase ohcDB = QSqlDatabase::database("purchaseConnection, customerConnection, merchandiseConnection");
 
-    if(ohcDB.isOpen() && name.length()) {
+    if(ohcDB.isOpen() && name.length())
+    {
+        QSqlQuery pQuery(pModel->database());
+        pQuery.prepare("INSERT INTO purchase VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        pQuery.bindValue(0, Pid);
+        pQuery.bindValue(1, Cid);
+        pQuery.bindValue(2, Mid);
+        pQuery.bindValue(3, name);
+        pQuery.bindValue(4, mname);
+        pQuery.bindValue(5, favorite);
+        pQuery.bindValue(6, category);
+        pQuery.bindValue(7, price);
+        pQuery.bindValue(8, quantity);
+        pQuery.bindValue(9, buyAmount);
+        pQuery.bindValue(10, totalPrice);
+        pQuery.bindValue(11, shopDate);
 
+        pQuery.exec();
+        pModel->select();
         ui->tableView->resizeColumnsToContents();
-
+        emit(addedPurchase(Pid));
     }
 }
 
@@ -132,8 +178,8 @@ void PurchaseManage::on_modifyPushButton_clicked()
         int Cid, Mid, price, quantity, buyAmount, totalPrice;
         QString name, mname, favorite, category, shopDate;
 
-        name = ui->customerComboBox->currentText();
-        mname = ui->merchandiseComboBox->currentText();
+        name = ui->nameComboBox->currentText();
+        mname = ui->mnameComboBox->currentText();
         favorite = ui->favoriteComboBox->currentText();
         category = ui->categoryComboBox->currentText();
         price = ui->priceLineEdit->text().toInt();
@@ -189,28 +235,39 @@ void PurchaseManage::on_modifyPushButton_clicked()
 
 void PurchaseManage::on_searchPushButton_clicked()
 {
-    searchModel->clear();
-        int i = ui->searchComboBox->currentIndex();
-        auto flag = (i)? Qt::MatchCaseSensitive|Qt::MatchContains
-                       : Qt::MatchCaseSensitive;
-        QModelIndexList indexes = clientModel->match(clientModel->index(0, i), Qt::EditRole, ui->searchLineEdit->text(), -1, Qt::MatchFlags(flag));
+    sModel->clear();
+    int i = ui->searchComboBox->currentIndex();
+    auto flag = (i)? Qt::MatchCaseSensitive|Qt::MatchContains
+                   : Qt::MatchCaseSensitive;
+    QModelIndexList indexes = pModel->match(pModel->index(0, i), Qt::EditRole, ui->searchLineEdit->text(), -1, Qt::MatchFlags(flag));
 
-        foreach(auto ix, indexes) {
-            int id = clientModel->data(ix.siblingAtColumn(0)).toInt(); //c->id();
-            QString name = clientModel->data(ix.siblingAtColumn(1)).toString();
-            QString number = clientModel->data(ix.siblingAtColumn(2)).toString();
-            QString address = clientModel->data(ix.siblingAtColumn(3)).toString();
-            QStringList strings;
-            strings << QString::number(id) << name << number << address;
+    foreach(auto k, indexes)
+    {
+        int Pid = pModel->data(k.siblingAtColumn(0)).toInt();
+        int Cid = pModel->data(k.siblingAtColumn(1)).toInt();
+        int Mid = pModel->data(k.siblingAtColumn(2)).toInt();
+        QString name = pModel->data(k.siblingAtColumn(3)).toString();
+        QString mname = pModel->data(k.siblingAtColumn(4)).toString();
+        QString favorite = pModel->data(k.siblingAtColumn(5)).toString();
+        QString category = pModel->data(k.siblingAtColumn(6)).toString();
+        int price = pModel->data(k.siblingAtColumn(7)).toInt();
+        int quantity = pModel->data(k.siblingAtColumn(8)).toInt();
+        int buyAmount = pModel->data(k.siblingAtColumn(9)).toInt();
+        int totalPrice = pModel->data(k.siblingAtColumn(10)).toInt();
+        QString shopDate = pModel->data(k.siblingAtColumn(11)).toString();
 
-            QList<QStandardItem *> items;
-            for (int i = 0; i < 4; ++i) {
-                items.append(new QStandardItem(strings.at(i)));
-            }
+        QStringList stringList;
 
-            searchModel->appendRow(items);
-            ui->searchTableView->resizeColumnsToContents();
+        stringList << QString::number(Pid) << QString::number(Cid) << QString::number(Mid) << name << mname << favorite << category << QString::number(price) << QString::number(quantity) << QString::number(buyAmount) << QString::number(totalPrice) << shopDate ;
+
+        QList<QStandardItem *> items;
+        for (int i = 0; i < 12; ++i) {
+            items.append(new QStandardItem(stringList.at(i)));
         }
+
+        sModel->appendRow(items);
+        ui->searchTableView->resizeColumnsToContents();
+    }
 }
 
 int PurchaseManage::makePid( )
@@ -290,8 +347,8 @@ void PurchaseManage::on_tableView_clicked(const QModelIndex &index)
     ui->PidLineEdit->setText(Pid);
     ui->CidLineEdit->setText(Cid);
     ui->MidLineEdit->setText(Mid);
-    ui->customerComboBox->setCurrentText(name);
-    ui->merchandiseComboBox->setCurrentText(mname);
+    ui->nameComboBox->setCurrentText(name);
+    ui->mnameComboBox->setCurrentText(mname);
     ui->favoriteComboBox->setCurrentText(favorite);
     ui->categoryComboBox->setCurrentText(category);
     ui->priceLineEdit->setText(price);
@@ -302,27 +359,29 @@ void PurchaseManage::on_tableView_clicked(const QModelIndex &index)
 
 
 }
-void PurchaseManage::on_customerComboBox_currentIndexChanged(int index)
+void PurchaseManage::on_nameComboBox_currentIndexChanged(int index)
 {
-    emit getCustomerInfo(CidList[index]);
+    qDebug()<<"1104";
+    emit getCustomerInfo(index+1000);
 }
 
-void PurchaseManage::getCustomerInfo(QString name, QString phoneNumber, QString address)
+void PurchaseManage::on_mnameComboBox_currentIndexChanged(int index)
 {
-    ui->customerTreeWidget->clear();
-    QTreeWidgetItem *item = new QTreeWidgetItem(ui->customerTreeWidget);
-    item->setText(0, name);
-    item->setText(1, phoneNumber);
-    item->setText(2, address);
-
+    //emit getMerchandiseInfo(MidList[index]);
 }
 
+//void PurchaseManage::getCustomerInfo(QString name, QString phoneNumber, QString address)
+//{
+//    ui->customerTreeWidget->clear();
+//    QTreeWidgetItem *item = new QTreeWidgetItem(ui->customerTreeWidget);
+//    item->setText(0, name);
+//    item->setText(1, phoneNumber);
+//    item->setText(2, address);
+
+//}
 
 
-void PurchaseManage::on_merchandiseComboBox_currentIndexChanged(int index)
-{
-    emit getMerchandiseInfo(MidList[index]);
-}
+
 
 void PurchaseManage::on_quantitySpinBox_valueChanged(int arg1)
 {
@@ -332,16 +391,24 @@ void PurchaseManage::on_quantitySpinBox_valueChanged(int arg1)
 
 void PurchaseManage::addCustomer(int Cid)
 {
-//    CidList << Cid;
-//    ui->customerComboBox->currentText();
+        //CidList << Cid;
+     qDebug()<<"d";
+        ui->nameComboBox->addItem(QString::number(Cid));
+
+}
+
+void PurchaseManage::addCustomer(int id, QString){
+
+    ui->nameComboBox->addItem(QString::number(id));
+
 }
 
 void PurchaseManage::addMerchandise(int Mid)
 {
-//    MidList << Mid;
-//    ui->merchandiseComboBox->currentText();
-}
+       // MidList << Mid;
 
+        ui->mnameComboBox->addItem(QString::number(Mid));
+}
 PurchaseManage::~PurchaseManage()
 {
     delete ui;
@@ -353,4 +420,18 @@ PurchaseManage::~PurchaseManage()
         database.commit();
         database.close();
     }
+}
+void PurchaseManage::acceptCustomerInfo(QString name, QString phoneNumber, QString, QString, QString, QString, QString, QString){
+    qDebug()<<"accept";
+    QStandardItem* item_name = new QStandardItem;
+    item_name->setText(name);
+
+    QStandardItem* item_phone = new QStandardItem;
+    item_phone->setText(phoneNumber);
+
+    QList<QStandardItem*> ls;
+    ls<<item_name<<item_phone;
+    clientInfoModel->setItem(1,1,item_name);
+ui->tableView->update();
+
 }
