@@ -10,6 +10,7 @@ class QTreeWidgetItem;
 
 class QSqlDatabase;
 class QSqlTableModel;
+class QStandardItemModel;
 
 namespace Ui {
 class MerchandiseManage;
@@ -46,6 +47,7 @@ private:
     int makeMid();
     QSqlTableModel *mModel;
     QMap<int, MerchandiseList*> merchandiseList;
+    QStandardItemModel *sModel;
     Ui::MerchandiseManage *ui;
     QMenu* menu;
 

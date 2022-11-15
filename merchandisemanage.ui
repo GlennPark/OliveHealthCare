@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>MerchandiseManage</string>
   </property>
-  <widget class="QTreeWidget" name="searchTreeWidget">
+  <widget class="QTreeView" name="searchTreeView">
    <property name="geometry">
     <rect>
      <x>160</x>
@@ -28,49 +28,6 @@
    <property name="frameShadow">
     <enum>QFrame::Plain</enum>
    </property>
-   <property name="rootIsDecorated">
-    <bool>false</bool>
-   </property>
-   <column>
-    <property name="text">
-     <string>ID</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Name</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Price</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Quantity</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Made in</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Category</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Description</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Enroll Date</string>
-    </property>
-   </column>
   </widget>
   <widget class="QPushButton" name="searchPushButton">
    <property name="geometry">

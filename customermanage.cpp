@@ -9,6 +9,7 @@
 
 #include <QSqlDatabase>
 #include <QSqlTableModel>
+#include <QStandardItemModel>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -31,6 +32,21 @@ CustomerManage::CustomerManage(QWidget* parent)
 
     // 나이 입력 시 제한
     ui->ageSpinBox->setRange(19,100);
+
+
+    sModel = new QStandardItemModel(0, 10);
+    sModel->setHeaderData(0, Qt::Horizontal, tr("CID"));
+    sModel->setHeaderData(1, Qt::Horizontal, tr("NAME"));
+    sModel->setHeaderData(2, Qt::Horizontal, tr("PHONE NUMBER"));
+    sModel->setHeaderData(3, Qt::Horizontal, tr("EMAIL"));
+    sModel->setHeaderData(4, Qt::Horizontal, tr("DOMAIN"));
+    sModel->setHeaderData(5, Qt::Horizontal, tr("ADDRESS"));
+    sModel->setHeaderData(6, Qt::Horizontal, tr("FAVORITE"));
+    sModel->setHeaderData(7, Qt::Horizontal, tr("AGE"));
+    sModel->setHeaderData(8, Qt::Horizontal, tr("GENDER"));
+    sModel->setHeaderData(9, Qt::Horizontal, tr("JOINDATE"));
+
+    ui->searchTreeView->setModel(sModel);
 
 }
 
@@ -210,7 +226,7 @@ void CustomerManage::on_modifyPushButton_clicked()
 
 void CustomerManage::on_searchPushButton_clicked()
 {
-    ui->searchTreeWidget->clear();
+    sModel->clear();
     //    for(int i = 0; i < ui->tableView->columnCount(); i++)
     int i = ui->searchComboBox->currentIndex();
     auto flag = (i)? Qt::MatchCaseSensitive|Qt::MatchContains
@@ -218,8 +234,6 @@ void CustomerManage::on_searchPushButton_clicked()
     {
         QModelIndexList indexList = cModel->match(cModel->index(0, i),
                                                   Qt::EditRole, ui->searchLineEdit->text(), -1, Qt::MatchFlags(flag));
-
-
 
         foreach(auto k, indexList)
         {
@@ -234,10 +248,14 @@ void CustomerManage::on_searchPushButton_clicked()
             QString gender = cModel->data(k.siblingAtColumn(8)).toString();
             QString joinDate = cModel->data(k.siblingAtColumn(9)).toString();
             QStringList stringList;
-            stringList << QString::number(Cid) << name << phoneNumber << email << domain << address << favorite << QString::number(age) << gender<< joinDate;
-            new QTreeWidgetItem(ui->searchTreeWidget, stringList);
-            for(int i = 0; i < ui->searchTreeWidget->columnCount(); i++)
-                ui->searchTreeWidget->resizeColumnToContents(i);
+            stringList << QString::number(Cid) << name << phoneNumber << email << domain << address << favorite << QString::number(age) << gender << joinDate;
+            QList<QStandardItem*> standardItem;
+            for(int i = 0; i < 10; ++i)
+            {
+                standardItem.append(new QStandardItem(stringList.at(i)));
+            }
+            sModel->appendRow(standardItem);
+            ui->searchTreeView->resizeColumnToContents(i);
         }
     }
 }
@@ -247,7 +265,7 @@ int CustomerManage::makeCid( )
 {
     if(cModel->rowCount() == 0)
     {
-        return 1000;
+        return 0;
     }
     else
     {
@@ -283,10 +301,10 @@ void CustomerManage::showContextMenu(const QPoint &pos)
 
 void CustomerManage::acceptCustomerInfo(int key)
 {
-qDebug()<<"client accpet"<<key;
+    qDebug()<<"client accpet"<<key;
     QModelIndexList indexList =
             cModel->match(cModel->index(0, 0), Qt::EditRole, key, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
-qDebug()<<indexList;
+    qDebug()<<indexList;
     foreach(auto k, indexList)
     {
         //       int Cid = cModel->data(k.siblingAtColumn(0)).toInt();
@@ -299,7 +317,7 @@ qDebug()<<indexList;
         int age = cModel->data(k.siblingAtColumn(7)).toInt();
         QString gender = cModel->data(k.siblingAtColumn(8)).toString();
         QString joinDate = cModel->data(k.siblingAtColumn(9)).toString();
-qDebug()<<name;
+        qDebug()<<name;
         emit sendCustomerInfo(name, phoneNumber, email, domain, address, favorite, gender, gender);
 
     }
@@ -329,14 +347,14 @@ void CustomerManage::on_tableView_clicked(const QModelIndex &index)
     ui->maleButton->setText(gender);
     ui->femaleButton->setText(gender);
     ui->dateEdit->setDate(joinDate);
-//    if(ui->maleButton->isChecked())
-//    {
-//        ui->maleButton->setText(gender);
-//    }
-//    else
-//    {
-//        ui->femaleButton->setText(gender);
-//    }
+    //    if(ui->maleButton->isChecked())
+    //    {
+    //        ui->maleButton->setText(gender);
+    //    }
+    //    else
+    //    {
+    //        ui->femaleButton->setText(gender);
+    //    }
 
 }
 

@@ -14,6 +14,7 @@ class QMenu;
 
 class QSqlDatabase;
 class QSqlTableModel;
+class QStandardItemModel;
 
 namespace Ui {
 class CustomerManage;
@@ -51,6 +52,7 @@ private:
 
     int makeCid();
 
+    QStandardItemModel *sModel;
     QSqlTableModel *cModel;
     QMap<int, CustomerList*> customerList;
     Ui::CustomerManage *ui;

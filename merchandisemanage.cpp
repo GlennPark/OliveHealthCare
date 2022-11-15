@@ -8,6 +8,7 @@
 
 #include <QSqlDatabase>
 #include <QSqlTableModel>
+#include <QStandardItemModel>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -33,6 +34,18 @@ MerchandiseManage::MerchandiseManage(QWidget* parent)
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
     connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(on_searchPushButton_clicked()));
 
+    sModel = new QStandardItemModel(0, 8);
+    sModel->setHeaderData(0, Qt::Horizontal, tr("MID"));
+    sModel->setHeaderData(1, Qt::Horizontal, tr("MNAME"));
+    sModel->setHeaderData(2, Qt::Horizontal, tr("PRICE"));
+    sModel->setHeaderData(3, Qt::Horizontal, tr("QUANTITY"));
+    sModel->setHeaderData(4, Qt::Horizontal, tr("MADEIN"));
+    sModel->setHeaderData(5, Qt::Horizontal, tr("CATEGORY"));
+    sModel->setHeaderData(6, Qt::Horizontal, tr("DESCRIPTION"));
+    sModel->setHeaderData(7, Qt::Horizontal, tr("ENROLLDATE"));
+
+
+    ui->searchTreeView->setModel(sModel);
 }
 
 void MerchandiseManage::dataSave()
@@ -175,7 +188,7 @@ void MerchandiseManage::on_modifyPushButton_clicked()
 
 void MerchandiseManage::on_searchPushButton_clicked()
 {
-    ui->searchTreeWidget->clear();
+    sModel->clear();
     //    for(int i = 0; i < ui->tableView->columnCount(); i++)
     int i = ui->searchComboBox->currentIndex();
     auto flag = (i)? Qt::MatchCaseSensitive|Qt::MatchContains
@@ -194,12 +207,17 @@ void MerchandiseManage::on_searchPushButton_clicked()
             QString category = mModel->data(k.siblingAtColumn(5)).toString();
             QString description = mModel->data(k.siblingAtColumn(6)).toString();
             QString enrollDate = mModel->data(k.siblingAtColumn(7)).toString();
-
             QStringList stringList;
+
             stringList << QString::number(Mid) << mname << price << QString::number(quantity) << madein << category << description << enrollDate;
-            new QTreeWidgetItem(ui->searchTreeWidget, stringList);
-            for(int i = 0; i < ui->searchTreeWidget->columnCount(); i++)
-                ui->searchTreeWidget->resizeColumnToContents(i);
+
+            QList<QStandardItem*> standardItem;
+            for(int i = 0; i < 8; ++i)
+            {
+                standardItem.append(new QStandardItem(stringList.at(i)));
+            }
+            sModel->appendRow(standardItem);
+            ui->searchTreeView->resizeColumnToContents(i);
         }
     }
 }
@@ -207,7 +225,7 @@ void MerchandiseManage::on_searchPushButton_clicked()
 int MerchandiseManage::makeMid( )
 {
     if(mModel->rowCount() == 0) {
-        return 3000;
+        return 0;
     }
     else
     {

@@ -273,7 +273,7 @@ void PurchaseManage::on_searchPushButton_clicked()
 int PurchaseManage::makePid( )
 {
     if(pModel->rowCount() == 0) {
-        return 10000;
+        return 0;
     } else {
         auto Pid = pModel->data(pModel->index(pModel->rowCount()-1, 0)).toInt();
         return ++Pid;
@@ -362,7 +362,7 @@ void PurchaseManage::on_tableView_clicked(const QModelIndex &index)
 void PurchaseManage::on_nameComboBox_currentIndexChanged(int index)
 {
     qDebug()<<"1104";
-    emit getCustomerInfo(index+1000);
+    emit getCustomerInfo(index);
 }
 
 void PurchaseManage::on_mnameComboBox_currentIndexChanged(int index)

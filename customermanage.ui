@@ -49,7 +49,7 @@
     <string>&amp;Modify</string>
    </property>
   </widget>
-  <widget class="QTreeWidget" name="searchTreeWidget">
+  <widget class="QTreeView" name="searchTreeView">
    <property name="geometry">
     <rect>
      <x>160</x>
@@ -64,59 +64,6 @@
    <property name="frameShadow">
     <enum>QFrame::Plain</enum>
    </property>
-   <property name="rootIsDecorated">
-    <bool>false</bool>
-   </property>
-   <column>
-    <property name="text">
-     <string>ID</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Name</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Phone Number</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Email</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Domain</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Address</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Favorite</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Age</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Gender</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>EnrollDate</string>
-    </property>
-   </column>
   </widget>
   <widget class="QComboBox" name="searchComboBox">
    <property name="geometry">
@@ -527,7 +474,7 @@
   <tabstop>dateEdit</tabstop>
   <tabstop>addPushButton</tabstop>
   <tabstop>modifyPushButton</tabstop>
-  <tabstop>searchTreeWidget</tabstop>
+  <tabstop>searchTreeView</tabstop>
   <tabstop>searchPushButton</tabstop>
   <tabstop>tableView</tabstop>
   <tabstop>searchComboBox</tabstop>
