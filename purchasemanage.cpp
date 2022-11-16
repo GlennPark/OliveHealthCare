@@ -17,17 +17,21 @@
 PurchaseManage::PurchaseManage(QWidget *parent)
     : QWidget(parent), ui(new Ui::PurchaseManage)
 {
+    // ui 시작
     ui->setupUi(this);
 
+    // 우클릭 후 삭제 시 ROW 에 포함된 내용들을 지우는 액션
     QAction* removeAction = new QAction(tr("&Remove"));
     connect(removeAction, SIGNAL(triggered()), SLOT(removeItem()));
     menu = new QMenu;
     menu->addAction(removeAction);
-    ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
 
+    // 마우스 오른쪽클릭 시 보조메뉴 등장
+    ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(showContextMenu(QPoint)));
     connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(on_searchPushButton_clicked()));
 
+    // 검색 시 보여주는 항목들을 searchTreeView 의 헤더로 설정
     sModel = new QStandardItemModel(0, 8);
     sModel->setHeaderData(0, Qt::Horizontal, tr("PID"));
     sModel->setHeaderData(1, Qt::Horizontal, tr("CID"));
@@ -42,6 +46,7 @@ PurchaseManage::PurchaseManage(QWidget *parent)
     sModel->setHeaderData(10, Qt::Horizontal, tr("TOTALPRICE"));
     sModel->setHeaderData(11, Qt::Horizontal, tr("SHOPDATE"));
 
+    // sModel에 담겨있는 정보를 searchTreeView 로 전달
     ui->searchTableView->setModel(sModel);
 
     clientInfoModel=new QStandardItemModel;
