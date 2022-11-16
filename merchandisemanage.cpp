@@ -280,8 +280,10 @@ int MerchandiseManage::makeMid( )
     }
 }
 
+// 우클릭 후 항목별 정보 삭제
 void MerchandiseManage::removeItem()
 {
+    // 현재 tableView 에서 선택된 정보를 modelIndex 내에서 지운다
     QModelIndex modelIndex = ui->tableView->currentIndex();
     if(modelIndex.isValid())
     {
@@ -291,12 +293,14 @@ void MerchandiseManage::removeItem()
     }
 }
 
+// tableView 에서 우클릭 시 해당 위치 정보를 알려준다
 void MerchandiseManage::on_tableView_customContextMenuRequested(const QPoint &pos)
 {
     QPoint globalPos = ui->tableView->mapToGlobal(pos);
     menu->exec(globalPos);
 }
 
+// tableView 에서 우클릭 시 해당 위치 정보에 맞는 메뉴를 출력한다
 void MerchandiseManage::showContextMenu(const QPoint &pos)
 {
     QPoint globalPos = ui->tableView->mapToGlobal(pos);
@@ -304,13 +308,16 @@ void MerchandiseManage::showContextMenu(const QPoint &pos)
         menu->exec(globalPos);
 }
 
+// purchaseManage 로 부터 제품 정보를 받아오기 위한 슬롯함수
 void MerchandiseManage::acceptMerchandiseInfo(int key)
 {
+    // 검색 시와 마찬가지로, QModelIndexList 에 모델 인덱스 및 키값이 일치하는 정보를 담는다
     QModelIndexList indexList =
             mModel->match(mModel->index(0, 0), Qt::EditRole, key, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
 
     foreach(auto k, indexList)
     {
+        //  k 순서대로 제품 정보 모델의 인덱스와 키값이 일치하는 데이터를 항목별 indexList에 저장한다
         //       int Mid = mModel->data(k.siblingAtColumn(0)).toInt();
         QString mname = mModel->data(k.siblingAtColumn(1)).toString();
         QString price = mModel->data(k.siblingAtColumn(2)).toString();
@@ -320,13 +327,16 @@ void MerchandiseManage::acceptMerchandiseInfo(int key)
         QString description = mModel->data(k.siblingAtColumn(6)).toString();
         QString enrollDate = mModel->data(k.siblingAtColumn(7)).toString();
 
+        // 항목별 제품 정보를 order 로 보내주는 signal
         emit sendMerchandiseInfo(mname, price, quantity, madein, category, description, enrollDate);
 
     }
 }
 
+// tableView 클릭시 (시작할때) 표시될 정보들
 void MerchandiseManage::on_tableView_clicked(const QModelIndex &index)
 {
+    // 항목별 데이터를 순서 및 자료형에 따라 인덱스로 보낸다
     QString Mid = mModel->data(index.siblingAtColumn(0)).toString();
     QString mname = mModel->data(index.siblingAtColumn(1)).toString();
     QString price = mModel->data(index.siblingAtColumn(2)).toString();
@@ -336,7 +346,7 @@ void MerchandiseManage::on_tableView_clicked(const QModelIndex &index)
     QString description = mModel->data(index.siblingAtColumn(6)).toString();
     QDate enrollDate = mModel->data(index.siblingAtColumn(7)).toDate();
 
-
+    // 각 ui 에 입력된 정보를 항목별로 저장한다
     ui->idLineEdit->setText(Mid);
     ui->nameLineEdit->setText(mname);
     ui->priceLineEdit->setText(price);
@@ -347,11 +357,12 @@ void MerchandiseManage::on_tableView_clicked(const QModelIndex &index)
     ui->dateEdit->setDate(enrollDate);
 }
 
-
+// 소멸자, 제품 관리 ui 종료
 MerchandiseManage::~MerchandiseManage()
 {
     delete ui;
 
+    // merchandiseConnection 데이터베이스의 내용을 모두 저장한다
     QSqlDatabase database = QSqlDatabase::database("merchandiseConnection");
 
     if(database.isOpen())
