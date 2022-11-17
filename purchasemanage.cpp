@@ -1,6 +1,5 @@
 #include "purchasemanage.h"
 #include "ui_purchasemanage.h"
-#include "purchaselist.h"
 
 #include <QFile>
 #include <QMenu>
@@ -394,7 +393,7 @@ void PurchaseManage::on_quantitySpinBox_valueChanged(int arg1)
 }
 
 
-void PurchaseManage::addCustomer(int Cid)
+void PurchaseManage::cInfoSlotPfromC(int Cid)
 {
         //CidList << Cid;
      qDebug()<<"d";

@@ -4,8 +4,7 @@
 #include <QWidget>
 #include <QHash>
 
-class PurchaseList;
-class QTreeWidgetItem;
+
 class QMenu;
 
 class QSqlDatabase;
@@ -43,7 +42,7 @@ private slots:
 
 
 public slots:
-    void addCustomer(int);
+    void cInfoSlotPfromC(int);
     void addMerchandise(int);
 //    void addPurchase(int);
 void acceptCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString);
@@ -65,7 +64,6 @@ private:
     QStandardItemModel *sModel;
     QSqlTableModel *pModel;
     QStandardItemModel* clientInfoModel;
-    QMap<int, PurchaseList*> purchaseList;
     Ui::PurchaseManage *ui;
     QMenu* menu;
 };

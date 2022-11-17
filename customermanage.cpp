@@ -1,7 +1,6 @@
 #include "customermanage.h"
 #include "QtCore/qdatetime.h"
 #include "ui_customermanage.h"
-#include "customerlist.h"
 
 #include <QFile>
 #include <QMenu>
@@ -116,7 +115,7 @@ void CustomerManage::dataSave()
         QString joinDate = cModel->data(cModel->index(i, 9)).toString();
 
         // purchaseManager 에서 사용될 Cid 값을 시그널 신호로 전달
-        emit addedCustomer(Cid);
+        emit cInfoSignCtoP(Cid);
     }
 
 }
@@ -193,7 +192,7 @@ void CustomerManage::on_addPushButton_clicked()
         ui->tableView->resizeColumnsToContents();
 
         // purchaseManager 에서 사용될 회원 키 Cid 값을 시그널 신호로 전달
-        emit addedCustomer(Cid);
+        emit cInfoSignCtoP(Cid);
     }
 }
 

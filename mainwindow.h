@@ -36,6 +36,8 @@ private slots:
 
 
 
+    void on_merchandiseSearchAction_triggered();
+
 private:
     Ui::MainWindow *ui;
     CustomerManage *customerManage;

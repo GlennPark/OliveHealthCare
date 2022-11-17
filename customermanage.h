@@ -5,11 +5,6 @@
 #include <QHash>
 
 
-//#include <QAbstractListModel>
-//#include "customerlist.h"
-
-class CustomerList;
-class QTreeWidgetItem;
 class QMenu;
 
 class QSqlDatabase;
@@ -23,6 +18,7 @@ class CustomerManage;
 class CustomerManage : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit CustomerManage(QWidget *parent = nullptr);
     ~CustomerManage();
@@ -44,7 +40,7 @@ private slots:
 
 
 signals:
-    void addedCustomer(int);
+    void cInfoSignCtoP(int);
     void sendCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString);
 
 private:
@@ -54,7 +50,7 @@ private:
 
     QStandardItemModel *sModel;
     QSqlTableModel *cModel;
-    QMap<int, CustomerList*> customerList;
+
     Ui::CustomerManage *ui;
     QMenu* menu;
 

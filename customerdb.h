@@ -5,7 +5,6 @@
 #include <QObject>
 #include <QtSql>
 #include <QList>
-#include "customerlist.h"
 
 class CustomerDB : public QAbstractListModel
 {
@@ -25,7 +24,7 @@ public:
 signals:
 
 private:
-    QList<CustomerList *> customers;
+
 
 };
 

@@ -21,11 +21,22 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     customerSearch = new CustomerSearch(this);
-
+    ui->mdiArea->addSubWindow(customerSearch);
+    customerSearch->setWindowTitle(tr("Customer Explorer"));
+    customerSearch->setWindowFlags(Qt::FramelessWindowHint);
+    customerSearch->showMaximized();
 
     merchandiseSearch = new MerchandiseSearch(this);
+    ui->mdiArea->addSubWindow(merchandiseSearch);
+    merchandiseSearch->setWindowTitle(tr("Merchandise Explorer"));
+    merchandiseSearch->setWindowFlags(Qt::FramelessWindowHint);
+    merchandiseSearch->showMaximized();
 
     purchaseSearch = new PurchaseSearch(this);
+    ui->mdiArea->addSubWindow(purchaseSearch);
+    purchaseSearch->setWindowTitle(tr("Purchase Explorer"));
+    purchaseSearch->setWindowFlags(Qt::FramelessWindowHint);
+    purchaseSearch->showMaximized();
 
     customerManage = new CustomerManage(this);
     QMdiSubWindow *cw = ui->mdiArea->addSubWindow(customerManage);
@@ -60,9 +71,20 @@ MainWindow::MainWindow(QWidget *parent)
     chattingClient->setWindowFlags(Qt::FramelessWindowHint);
     chattingClient->showMaximized();
 
+    connect(customerSearch, SIGNAL(destroyed()), customerSearch, SLOT(deleteLater()));
+    connect(customerManage, SIGNAL(cInfoSignCtoCS(int)), customerSearch, SLOT(cInfoSlotCSfromC(int)));
+
+    connect(merchandiseSearch, SIGNAL(destroyed()), merchandiseSearch, SLOT(deleteLater()));
+    connect(merchandiseManage, SIGNAL(mInfoSignMtoMS(int)), merchandiseSearch, SLOT(mInfoSlotMSfromM(int)));
+
+    connect(purchaseSearch, SIGNAL(destroyed()), purchaseSearch, SLOT(deleteLater()));
+    connect(purchaseManage, SIGNAL(pInfoSignPtoPS(int)), purchaseSearch, SLOT(pInfoSlotPSfromP()));
+
     connect(customerManage, SIGNAL(destroyed()),customerManage, SLOT(deleteLater()));
-    connect(customerManage, SIGNAL(addedCustomer(int)),purchaseManage, SLOT(addCustomer(int)));
+    // 회원 관리 페이지로가 보낸 회원 정보 시그널을 구입 관리 페이지가 전달받아 슬롯 함수로 반환
+    connect(customerManage, SIGNAL(cInfoSignCtoP(int)), purchaseManage, SLOT(cInfoSlotPformC(int)));
     connect(customerManage, SIGNAL(sendCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString)),purchaseManage,SLOT(acceptCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString)));
+
     connect(customerManage, SIGNAL(addedCustomer(int)),chattingServer,SLOT(addCustomer(int, QString)));
 
     connect(merchandiseManage, SIGNAL(destroyed()),merchandiseManage, SLOT(deleteLater()));
@@ -139,5 +161,14 @@ void MainWindow::on_customerSearchAction_triggered()
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+
+void MainWindow::on_merchandiseSearchAction_triggered()
+{
+    if(customerSearch != nullptr)
+    {
+        merchandiseSearch->setFocus();
+    }
 }
 

@@ -1,6 +1,5 @@
 #include "merchandisemanage.h"
 #include "ui_merchandisemanage.h"
-#include "merchandiselist.h"
 
 #include <QFile>
 #include <QMenu>

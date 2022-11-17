@@ -4,9 +4,8 @@
 #include <QWidget>
 #include <QMap>
 
-class MerchandiseList;
+
 class QMenu;
-class QTreeWidgetItem;
 
 class QSqlDatabase;
 class QSqlTableModel;
@@ -46,7 +45,6 @@ signals:
 private:
     int makeMid();
     QSqlTableModel *mModel;
-    QMap<int, MerchandiseList*> merchandiseList;
     QStandardItemModel *sModel;
     Ui::MerchandiseManage *ui;
     QMenu* menu;
