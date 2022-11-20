@@ -81,9 +81,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(purchaseManage, SIGNAL(pInfoSignPtoPS(int)), purchaseSearch, SLOT(pInfoSlotPSfromP()));
 
     connect(customerManage, SIGNAL(destroyed()),customerManage, SLOT(deleteLater()));
-    // 회원 관리 페이지로가 보낸 회원 정보 시그널을 구입 관리 페이지가 전달받아 슬롯 함수로 반환
-    connect(customerManage, SIGNAL(cInfoSignCtoP(int)), purchaseManage, SLOT(cInfoSlotPformC(int)));
-    connect(customerManage, SIGNAL(sendCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString)),purchaseManage,SLOT(acceptCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString)));
+    // 회원 관리 페이지가 보낸 회원 정보 시그널을 구입 관리 페이지가 전달받아 슬롯 함수로 반환
+    connect(customerManage, SIGNAL(cInfoSignCtoP(int, QString)), purchaseManage, SLOT(cInfoSlotPformC(int, QString)));
+    // 회원 관리 페이지가 보낸 회원 정보 시그널을 채팅
+    connect(customerManage, SIGNAL(cInfoSignCtoChat(QString, QString, QString, QString, QString, QString, QString, QString)),purchaseManage,SLOT(acceptCustomerInfo(QString, QString, QString, QString, QString, QString, QString, QString)));
 
     connect(customerManage, SIGNAL(addedCustomer(int)),chattingServer,SLOT(addCustomer(int, QString)));
 

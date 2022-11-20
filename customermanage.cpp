@@ -67,7 +67,7 @@ void CustomerManage::dataSave()
 
         // 회원 정보 테이블을 생성, Key 값인 cid 를 Primary Key 로 설정 및 항목별 자료형 선정
         cQuery.exec("CREATE TABLE IF NOT EXISTS customer"
-                    "(cid INTEGER PRIMARY KEY, "
+                    "(Cid INTEGER PRIMARY KEY, "
                     "name VARCHAR(20), "
                     "phoneNumber VARCHAR(100), "
                     "email VARCHAR(100), "
@@ -100,6 +100,15 @@ void CustomerManage::dataSave()
     ui->tableView->setModel(cModel);
     ui->tableView->resizeColumnsToContents();
 
+    // 채팅 서버에 고객 이름과 ID를 전송할 때 쓰이는 리스트
+    QList<int> CidList;
+    QList<QString> cNameList;
+
+    // 채팅 서버에 고객 이름과 ID를 전송할 때 쓰이는 변수
+
+    //    int Cid;
+    //    QString name;
+
     // rowCount 순서 증가에 따라 항목별 자료형과 데이터를 인덱스에 저장
     for(int i = 0; i < cModel->rowCount(); i++)
     {
@@ -114,15 +123,25 @@ void CustomerManage::dataSave()
         QString gender = cModel->data(cModel->index(i, 8)).toString();
         QString joinDate = cModel->data(cModel->index(i, 9)).toString();
 
-        // purchaseManager 에서 사용될 Cid 값을 시그널 신호로 전달
-        emit cInfoSignCtoP(Cid);
+        // 회원 키값과 이름을 record 로 담기
+        Cid = cModel->record(i).value("Cid").toInt();
+        name = cModel->record(i).value("name").toString();
+
+        CidList << Cid;
+        cNameList << name;
     }
 
+    // 채팅 서버에 회원 키값과 회원 이름 리스트를 전달하기 위한 시그널
+    emit cInfoSignCtoChat(CidList, cNameList);
 }
 
 // 회원 등록 버튼 클릭 시 기능
 void CustomerManage::on_addPushButton_clicked()
 {
+    // 회원 키값 정보를 저장할 리스트
+    QList<int> CidAddList;
+    QList<QString> cNameAddList;
+
     // 회원별 Key 값을 생성 및 부여, 항목별로 전달될 자료형을 선정한다
     int Cid = makeCid();
     QString name, phoneNumber, email, domain, address, favorite, gender, joinDate;
@@ -191,9 +210,15 @@ void CustomerManage::on_addPushButton_clicked()
         cModel->select();
         ui->tableView->resizeColumnsToContents();
 
-        // purchaseManager 에서 사용될 회원 키 Cid 값을 시그널 신호로 전달
-        emit cInfoSignCtoP(Cid);
+        // 회원 정보가 등록되었을 때 구매 관리 클래스에 전달하기 위한 시그널
+        emit cInfoAddSignCtoP(Cid);
+        CidAddList << Cid;
+
+        // 회원 정보가 등록되었을 때 채팅 서버에 전달하기 위한 시그널
+        emit cInfoAddSignCtoChat(CidAddList, cNameAddList);
+        cNameAddList << name;
     }
+
 }
 
 // 회원 정보 수정 버튼 클릭 시 기능
@@ -205,11 +230,12 @@ void CustomerManage::on_modifyPushButton_clicked()
     // modelIndex 의 값이 일치할때 조건문
     if(modelIndex.isValid())
     {
-        // 수정 시 키값을 제외한 회원 정보들의 자료형 및 자료명을 설정해 준다
+        // 수정 시 회원 정보들의 자료형 및 자료명을 설정해 준다
         QString name, phoneNumber, email, domain, address, favorite, gender, joinDate;
-        int age;
+        int Cid, age;
 
         // 항목별 ui 에 입력된 정보들을 형식에 맞춰 인덱스에 등록
+        Cid = ui->idLineEdit->text().toInt();
         name = ui->nameLineEdit->text();
         phoneNumber = ui->phoneNumberLineEdit->text();
         email = ui->emailLineEdit->text();
@@ -228,20 +254,8 @@ void CustomerManage::on_modifyPushButton_clicked()
         }
 
         joinDate = ui->dateEdit->date().toString();
-#if 1
-        // 항목을 순서에 따라 한 줄씩 modelIndex 에 데이터 저장
-        cModel->setData(modelIndex.siblingAtColumn(1), name);
-        cModel->setData(modelIndex.siblingAtColumn(2), phoneNumber);
-        cModel->setData(modelIndex.siblingAtColumn(3), email);
-        cModel->setData(modelIndex.siblingAtColumn(4), domain);
-        cModel->setData(modelIndex.siblingAtColumn(5), address);
-        cModel->setData(modelIndex.siblingAtColumn(6), favorite);
-        cModel->setData(modelIndex.siblingAtColumn(7), age);
-        cModel->setData(modelIndex.siblingAtColumn(8), gender);
-        cModel->setData(modelIndex.siblingAtColumn(9), joinDate);
-        cModel->submit();
 
-#else
+        // customer 테이블 정보 수정을 위한 QSql querry
         QSqlQuery cQuery(cModel->database());
         cQuery.prepare("UPDATE customer SET name = ?, phoneNumber = ?, email = ?, domain = ?, address = ?, favorite = ?, age = ?, gender = ?, joinDate = ? WHERE Cid = ?");
 
@@ -256,11 +270,22 @@ void CustomerManage::on_modifyPushButton_clicked()
         cQuery.bindValue(8, joinDate);
         cQuery.bindValue(9, Cid);
         cQuery.exec();
-#endif
+
         // 컨텐츠에 맞게 컬럼 사이즈 조정
         cModel->select();
         ui->tableView->resizeColumnsToContents();
+
+        // 수정될 회원 정보 내용을 담는 리스트
+        QList<QString> cInfoList;
+        cInfoList << name << phoneNumber << address << favorite;
+
+        // 회원 정보가 수정되었을 때 구매 관리 클래스에 전달하기 위한 시그널
+        emit cInfoModSignCtoP(Cid, cInfoList);
+
+        // 회원 정보가 수정되었을 때 채팅 서버에 전달하기 위한 시그널
+        emit cInfoModSignCtoChat(Cid, name);
     }
+
 }
 
 // 회원 검색 버튼 클릭 시 기능
@@ -327,6 +352,11 @@ int CustomerManage::makeCid( )
 // 우클릭 후 항목별 정보 삭제
 void CustomerManage::removeItem()
 {
+    int r = ui->tableView->currentIndex().row();
+
+    int Cid = cModel->record(r).value("Cid").toInt();
+    QString name = cModel->record(r).value("name").toString();
+
     // 현재 tableView 에서 선택된 정보를 modelIndex 내에서 지운다
     QModelIndex modelIndex = ui->tableView->currentIndex();
     if(modelIndex.isValid())
@@ -335,6 +365,13 @@ void CustomerManage::removeItem()
         cModel->select();
         ui->tableView->resizeColumnsToContents();
     }
+
+    // 회원 정보가 삭제되었음을 구매 관리 페이지에 전달하기 위한 시그널
+    emit cInfoDelSignCtoP(Cid);
+
+    // 회원 정보가 삭제되었음을 채팅 서버에 전달하기 위한 시그널
+    emit cInfoDelSignCtoChat(name);
+
 }
 
 // tableView 에서 우클릭 시 해당 위치 정보를 알려준다
@@ -352,38 +389,70 @@ void CustomerManage::showContextMenu(const QPoint &pos)
         menu->exec(globalPos);
 }
 
-// purchaseManage 로 부터 회원 정보를 받아오기 위한 슬롯함수
-void CustomerManage::acceptCustomerInfo(int key)
+// 구매 정보 등록 시 해당되는 고객 정보를 전송하는 슬롯함수
+void CustomerManage::pInfoAddSlotCfromP(int Cid)
 {
-    // 검색 시와 마찬가지로, QModelIndexList 에 모델 인덱스 및 키값이 일치하는 정보를 담는다
-    QModelIndexList indexList =
-            cModel->match(cModel->index(0, 0), Qt::EditRole, key, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
+    // 회원 정보 중 구매 클래스에 전송할 항목 선택
+    QList<QString> cInfoList;
+    QSqlQuery cQuery(cModel->database());
+    cQuery.prepare("SELECT name, phoneNumber, address, favorite"
+                   "FROM customer WHERE Cid = ?");
+    cQuery.bindValue(0, Cid);
+    cQuery.exec();
 
-    foreach(auto k, indexList)
-    {
-        //  k 순서대로 회원 정보 모델의 인덱스와 키값이 일치하는 데이터를 항목별 indexList에 저장한다
-        //       int Cid = cModel->data(k.siblingAtColumn(0)).toInt();
-        QString name = cModel->data(k.siblingAtColumn(1)).toString();
-        QString phoneNumber = cModel->data(k.siblingAtColumn(2)).toString();
-        QString email = cModel->data(k.siblingAtColumn(3)).toString();
-        QString domain = cModel->data(k.siblingAtColumn(4)).toString();
-        QString address = cModel->data(k.siblingAtColumn(5)).toString();
-        QString favorite = cModel->data(k.siblingAtColumn(6)).toString();
-        int age = cModel->data(k.siblingAtColumn(7)).toInt();
-        QString gender = cModel->data(k.siblingAtColumn(8)).toString();
-        QString joinDate = cModel->data(k.siblingAtColumn(9)).toString();
+    // 항목 별 인덱스를 저장한다
+    QSqlRecord record = cQuery.record();
+    int nameIndex = record.indexOf("name");
+    int phoneNumberIndex = record.indexOf("phoneNumber");
+    int addressIndex = record.indexOf("address");
+    int favoriteIndex = record.indexOf("favorite");
 
-        // 항목별 회원 정보를 order 로 보내주는 signal
-        emit sendCustomerInfo(name, phoneNumber, email, domain, address, favorite, gender, gender);
+    cQuery.next();
 
-    }
+    // 구매 클래스로 전송할 회원 정보를 담는다
+    QString name = cQuery.value(nameIndex).toString();
+    QString phoneNumber = cQuery.value(phoneNumberIndex).toString();
+    QString address = cQuery.value(addressIndex).toString();
+    QString favorite = cQuery.value(favoriteIndex).toString();
+
+    cInfoList << name << phoneNumber << address << favorite;
+
+    emit pInfoAddReturnSignCtoP(cInfoList);
 }
+// purchaseManage 로 부터 회원 정보를 받아오기 위한 슬롯함수
+//void CustomerManage::acceptCustomerInfo(int key)
+//{
+//     검색 시와 마찬가지로, QModelIndexList 에 모델 인덱스 및 키값이 일치하는 정보를 담는다
+//    QModelIndexList indexList =
+//            cModel->match(cModel->index(0, 0), Qt::EditRole, key, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
 
-// tableView 클릭시 (시작할때) 표시될 정보들
+//    foreach(auto k, indexList)
+//    {
+//          k 순서대로 회원 정보 모델의 인덱스와 키값이 일치하는 데이터를 항목별 indexList에 저장한다
+//               int Cid = cModel->data(k.siblingAtColumn(0)).toInt();
+//        QString name = cModel->data(k.siblingAtColumn(1)).toString();
+//        QString phoneNumber = cModel->data(k.siblingAtColumn(2)).toString();
+//        QString email = cModel->data(k.siblingAtColumn(3)).toString();
+//        QString domain = cModel->data(k.siblingAtColumn(4)).toString();
+//        QString address = cModel->data(k.siblingAtColumn(5)).toString();
+//        QString favorite = cModel->data(k.siblingAtColumn(6)).toString();
+//        int age = cModel->data(k.siblingAtColumn(7)).toInt();
+//        QString gender = cModel->data(k.siblingAtColumn(8)).toString();
+//        QString joinDate = cModel->data(k.siblingAtColumn(9)).toString();
+
+//         항목별 회원 정보를 order 로 보내주는 signal
+//               emit sendCustomerInfo(name, phoneNumber, email, domain, address, favorite, gender, gender);
+
+//    }
+//}
+
+// 현재 회원 정보를 ui 입력단에 표시해 주는 슬롯
 void CustomerManage::on_tableView_clicked(const QModelIndex &index)
 {
+
+
     // 항목별 데이터를 순서 및 자료형에 따라 인덱스로 보낸다
-    QString Cid = cModel->data(index.siblingAtColumn(0)).toString();
+    int Cid = cModel->data(index.siblingAtColumn(0)).toInt();
     QString name = cModel->data(index.siblingAtColumn(1)).toString();
     QString phoneNumber = cModel->data(index.siblingAtColumn(2)).toString();
     QString email = cModel->data(index.siblingAtColumn(3)).toString();
@@ -395,7 +464,7 @@ void CustomerManage::on_tableView_clicked(const QModelIndex &index)
     QDate joinDate = cModel->data(index.siblingAtColumn(9)).toDate();
 
     // 각 ui 에 입력된 정보를 항목별로 저장한다
-    ui->idLineEdit->setText(Cid);
+    ui->idLineEdit->setText(QString::number(Cid));
     ui->nameLineEdit->setText(name);
     ui->phoneNumberLineEdit->setText(phoneNumber);
     ui->emailLineEdit->setText(email);
@@ -406,16 +475,9 @@ void CustomerManage::on_tableView_clicked(const QModelIndex &index)
     ui->maleButton->setText(gender);
     ui->femaleButton->setText(gender);
     ui->dateEdit->setDate(joinDate);
-    //    if(ui->maleButton->isChecked())
-    //    {
-    //        ui->maleButton->setText(gender);
-    //    }
-    //    else
-    //    {
-    //        ui->femaleButton->setText(gender);
-    //    }
-
 }
+
+
 
 // 소멸자, 회원 관리 ui 종료
 CustomerManage::~CustomerManage()
