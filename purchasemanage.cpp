@@ -65,13 +65,15 @@ PurchaseManage::PurchaseManage(QWidget *parent)
         tModel->setHeaderData(2, Qt::Horizontal, tr("MID"));
         tModel->setHeaderData(3, Qt::Horizontal, tr("NAME"));
         tModel->setHeaderData(4, Qt::Horizontal, tr("MNAME"));
-        tModel->setHeaderData(5, Qt::Horizontal, tr("FAVORITE"));
-        tModel->setHeaderData(6, Qt::Horizontal, tr("CATEGORY"));
-        tModel->setHeaderData(7, Qt::Horizontal, tr("PRICE"));
-        tModel->setHeaderData(8, Qt::Horizontal, tr("QUANTITY"));
-        tModel->setHeaderData(9, Qt::Horizontal, tr("BUYAMOUNT"));
-        tModel->setHeaderData(10, Qt::Horizontal, tr("TOTALPRICE"));
-        tModel->setHeaderData(11, Qt::Horizontal, tr("SHOPDATE"));
+        tModel->setHeaderData(5, Qt::Horizontal, tr("ADDRESS"));
+        tModel->setHeaderData(6, Qt::Horizontal, tr("FAVORITE"));
+        tModel->setHeaderData(7, Qt::Horizontal, tr("CATEGORY"));
+        tModel->setHeaderData(8, Qt::Horizontal, tr("PRICE"));
+        tModel->setHeaderData(9, Qt::Horizontal, tr("QUANTITY"));
+        tModel->setHeaderData(10, Qt::Horizontal, tr("BUYAMOUNT"));
+        tModel->setHeaderData(11, Qt::Horizontal, tr("TOTALPRICE"));
+        tModel->setHeaderData(12, Qt::Horizontal, tr("SHOPDATE"));
+        tModel->setHeaderData(13, Qt::Horizontal, tr("PHONENUMBER"));
 
         //sModel (searchModel) 의 헤더 데이터
         sModel->setHeaderData(0, Qt::Horizontal, tr("PID"));
@@ -79,14 +81,15 @@ PurchaseManage::PurchaseManage(QWidget *parent)
         sModel->setHeaderData(2, Qt::Horizontal, tr("MID"));
         sModel->setHeaderData(3, Qt::Horizontal, tr("NAME"));
         sModel->setHeaderData(4, Qt::Horizontal, tr("MNAME"));
-        sModel->setHeaderData(5, Qt::Horizontal, tr("FAVORITE"));
-        sModel->setHeaderData(6, Qt::Horizontal, tr("CATEGORY"));
-        sModel->setHeaderData(7, Qt::Horizontal, tr("PRICE"));
-        sModel->setHeaderData(8, Qt::Horizontal, tr("QUANTITY"));
-        sModel->setHeaderData(9, Qt::Horizontal, tr("BUYAMOUNT"));
-        sModel->setHeaderData(10, Qt::Horizontal, tr("TOTALPRICE"));
-        sModel->setHeaderData(11, Qt::Horizontal, tr("SHOPDATE"));
-
+        sModel->setHeaderData(5, Qt::Horizontal, tr("ADDRESS"));
+        sModel->setHeaderData(6, Qt::Horizontal, tr("FAVORITE"));
+        sModel->setHeaderData(7, Qt::Horizontal, tr("CATEGORY"));
+        sModel->setHeaderData(8, Qt::Horizontal, tr("PRICE"));
+        sModel->setHeaderData(9, Qt::Horizontal, tr("QUANTITY"));
+        sModel->setHeaderData(10, Qt::Horizontal, tr("BUYAMOUNT"));
+        sModel->setHeaderData(11, Qt::Horizontal, tr("TOTALPRICE"));
+        sModel->setHeaderData(12, Qt::Horizontal, tr("SHOPDATE"));
+        sModel->setHeaderData(13, Qt::Horizontal, tr("PHONENUMBER"));
     }
     ui->tableView->setModel(pModel);
     ui->tableView->resizeColumnsToContents();
@@ -131,8 +134,8 @@ void PurchaseManage::dataSave()
         tModel->appendRow(pItem[0]);
         tModel->setItem(tR, 1, pItem[1]);
         tModel->setItem(tR, 2, pItem[2]);
-        tModel->setItem(tR, 9, pItem[3]);
-        tModel->setItem(tR, 11, pItem[4]);
+        tModel->setItem(tR, 10, pItem[3]);
+        tModel->setItem(tR, 12, pItem[4]);
 
         // 회원 및 제품 정보를 불러올 때 필요한 시그널
         emit pInfoAddSignPtoC(Cid);
@@ -146,7 +149,7 @@ void PurchaseManage::on_addPushButton_clicked()
 {
     // 항목 별 자료형 설정
     int Pid = makePid( );
-    int Cid, Mid, buyAmount;
+    int Cid = 0, Mid = 0, buyAmount;
     QString shopDate;
 
     // 항목별 ui 에 입력된 내용을 자료형에 따라 저장한다
@@ -181,8 +184,8 @@ void PurchaseManage::on_addPushButton_clicked()
     tModel->appendRow(pItem[0]);
     tModel->setItem(tR, 1, pItem[1]);
     tModel->setItem(tR, 2, pItem[2]);
-    tModel->setItem(tR, 9, pItem[3]);
-    tModel->setItem(tR, 11, pItem[4]);
+    tModel->setItem(tR, 10, pItem[3]);
+    tModel->setItem(tR, 12, pItem[4]);
 
     ui->tableView->resizeColumnsToContents();
 
@@ -328,7 +331,7 @@ void PurchaseManage::showContextMenu(const QPoint &pos)
         menu->exec(globalPos);
 }
 
-// 회원 정보를 받아와 totalViewTable 에 적용하는 슬롯함수
+// 회원 정보를 받아와 totalTableView에 적용하는 슬롯함수
 void PurchaseManage::pInfoAddReturnSlotPfromC(QList<QString> cInfoList)
 {
 
@@ -349,12 +352,36 @@ void PurchaseManage::pInfoAddReturnSlotPfromC(QList<QString> cInfoList)
     }
 
     // tModel에 열에 따라 정보 저장
-    tModel->setItem(tr, )
+    tModel->setItem(tR, 3, cItem[0]);
+    tModel->setItem(tR, 13, cItem[1]);
+    tModel->setItem(tR, 5, cItem[2]);
+    tModel->setItem(tR, 6, cItem[3]);
 }
 
+// 제품 정보를 받아와 totalTableView에 적용하는 슬롯함수
 void PurchaseManage::pInfoAddReturnSlotPfromM(QList<QString> mInfoList)
 {
+    // 항목별 리스트 저장
+    QString mname = mInfoList[0];
+    QString price = mInfoList[1];
+    QString quantity = mInfoList[2];
+    QString category = mInfoList[3];
 
+    QStringList mList;
+    mList << mname << price << quantity << category;
+
+    // 리스트 정보를 테이블에 맞는 자료형으로 변환
+    QList<QStandardItem*> mItem;
+    for(int i = 0; i < mItem.size(); i++)
+    {
+        mItem << new QStandardItem(mList[i]);
+    }
+
+    //
+    tModel->setItem(tR, 4, mItem[0]);
+    tModel->setItem(tR, 8, mItem[1]);
+    tModel->setItem(tR, 9, mItem[2]);
+    tModel->setItem(tR, 7, mItem[3]);
 }
 
 
