@@ -138,8 +138,10 @@ void CustomerManage::dataSave()
 // 회원 등록 버튼 클릭 시 기능
 void CustomerManage::on_addPushButton_clicked()
 {
-    // 회원 키값 정보를 저장할 리스트
+    // 회원 키값 정보를 저장할 리스트 -> 구매 클래스에서 활용
     QList<int> CidAddList;
+
+    // 회원 이름 정보를 저장할 리스트 -> 채팅 서버에서 활용
     QList<QString> cNameAddList;
 
     // 회원별 Key 값을 생성 및 부여, 항목별로 전달될 자료형을 선정한다
@@ -352,8 +354,10 @@ int CustomerManage::makeCid( )
 // 우클릭 후 항목별 정보 삭제
 void CustomerManage::removeItem()
 {
+    // 테이블에서 해당되는 열 값을 구분해준다
     int r = ui->tableView->currentIndex().row();
 
+    // 구매 클래스에 전달할 키값과 회원이름을 선언
     int Cid = cModel->record(r).value("Cid").toInt();
     QString name = cModel->record(r).value("name").toString();
 
@@ -389,7 +393,7 @@ void CustomerManage::showContextMenu(const QPoint &pos)
         menu->exec(globalPos);
 }
 
-// 구매 정보 등록 시 해당되는 고객 정보를 전송하는 슬롯함수
+// 구매 클래스에서 등록시 해당되는 회원 정보를 전송하는 슬롯함수
 void CustomerManage::pInfoAddSlotCfromP(int Cid)
 {
     // 회원 정보 중 구매 클래스에 전송할 항목 선택
@@ -416,7 +420,7 @@ void CustomerManage::pInfoAddSlotCfromP(int Cid)
     QString favorite = cQuery.value(favoriteIndex).toString();
 
     cInfoList << name << phoneNumber << address << favorite;
-
+    // 항목별 회원 정보를 구매 클래스로 보내주는 시그널
     emit pInfoAddReturnSignCtoP(cInfoList);
 }
 
@@ -451,8 +455,8 @@ void CustomerManage::pInfoSearchSlotCfromP(int Cid)
     emit pInfoSearchReturnSignCtoP(cInfoList);
 }
 
-// 구매 클래스에서 수정시 해당되는 회원 정보를 전송하는 슬롯함수
-void CustomerManage::pInfoModSlotCtoP(int Cid, int r)
+// 구매 클래스에서 수정 시 해당되는 회원 정보를 전송하는 슬롯함수
+void CustomerManage::pInfoModSlotCfromP(int Cid, int r)
 {
     // 회원 정보 중 구매 클래스에 전송할 항목 선택
     QList<QString> cInfoList;
@@ -479,11 +483,12 @@ void CustomerManage::pInfoModSlotCtoP(int Cid, int r)
 
     cInfoList << name << phoneNumber << address << favorite;
 
+    // 구매 클래스에서 수정 시 해당되는 제품 정보를 전송하는 시그널
     emit pInfoModReturnSignCtoP(cInfoList, r);
 
 }
 
-// 현재 회원 정보를 ui 입력단에 표시해 주는 슬롯
+// 현재 회원 정보를 ui 입력단에 표시해 주는 슬롯함수
 void CustomerManage::on_tableView_clicked(const QModelIndex &index)
 {
 

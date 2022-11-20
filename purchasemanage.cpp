@@ -25,152 +25,175 @@ PurchaseManage::PurchaseManage(QWidget *parent)
     menu = new QMenu;
     menu->addAction(removeAction);
 
-    // 마우스 오른쪽클릭 시 보조메뉴 등장
-    ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(showContextMenu(QPoint)));
+    // totalTableView 에서 마우스 오른쪽클릭 시 보조메뉴 등장
+    ui->totalTableView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->totalTableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(showContextMenu(QPoint)));
     connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(on_searchPushButton_clicked()));
 
-    // 검색 시 보여주는 항목들을 searchTreeView 의 헤더로 설정
-    sModel = new QStandardItemModel(0, 8);
-    sModel->setHeaderData(0, Qt::Horizontal, tr("PID"));
-    sModel->setHeaderData(1, Qt::Horizontal, tr("CID"));
-    sModel->setHeaderData(2, Qt::Horizontal, tr("MID"));
-    sModel->setHeaderData(3, Qt::Horizontal, tr("NAME"));
-    sModel->setHeaderData(4, Qt::Horizontal, tr("PNAME"));
-    sModel->setHeaderData(5, Qt::Horizontal, tr("FAVORITE"));
-    sModel->setHeaderData(6, Qt::Horizontal, tr("CATEGORY"));
-    sModel->setHeaderData(7, Qt::Horizontal, tr("PRICE"));
-    sModel->setHeaderData(8, Qt::Horizontal, tr("QUANTITY"));
-    sModel->setHeaderData(9, Qt::Horizontal, tr("BUYAMOUNT"));
-    sModel->setHeaderData(10, Qt::Horizontal, tr("TOTALPRICE"));
-    sModel->setHeaderData(11, Qt::Horizontal, tr("SHOPDATE"));
-
-    // sModel에 담겨있는 정보를 searchTreeView 로 전달
-    ui->searchTableView->setModel(sModel);
-
-    clientInfoModel=new QStandardItemModel;
-    clientInfoModel->setColumnCount(2);
-    clientInfoModel->setRowCount(5);
-    QStringList ls;
-    ls<<"id"<<"phone";
-    clientInfoModel->setHorizontalHeaderLabels(ls);
-
-
-    ui->tableView->setModel(clientInfoModel);
-   ui->tableView->show();
-}
-
-void PurchaseManage::dataSave()
-{
+    //QSQLITE 형식의 구매 정보 접속을 설정한다
     QSqlDatabase ohcDB = QSqlDatabase::addDatabase("QSQLITE","purchaseConnection");
     ohcDB.setDatabaseName("purchaseDatabase.db");
 
     if(ohcDB.open())
     {
-        QSqlQuery pQuery(ohcDB);
+        QSqlQuery pQuery(pModel->database());
         pQuery.exec("CREATE TABLE IF NOT EXISTS purchase"
-                    "(pid INTEGER PRIMARY KEY, "
-                    "cid INTEGER PRIMARY KEY, "
-                    "mid INTEGER PRIMARY KEY, "
-                    "name varchar(20), "
-                    "mname varchar(20), "
-                    "favorite varchar(100), "
-                    "category varchar(100), "
-                    "price INTEGER, "
-                    "quantity INTEGER, "
+                    "(Pid INTEGER PRIMARY KEY, "
+                    "Cid INTEGER PRIMARY KEY, "
+                    "Mid INTEGER PRIMARY KEY, "
                     "buyAmount INTEGER, "
-                    "totalPrice INTEGER, "
                     "shopDate Date);");
 
         pModel = new QSqlTableModel(this, ohcDB);
         pModel->setTable("purchase");
-        pModel->setTable("customer");
-        pModel->setTable("merchandise");
+
+        tModel = new QStandardItemModel(0, 12);
+        sModel = new QStandardItemModel(0, 12);
+
         pModel->select();
 
-        //        cModel = new QSqlTableModel(Custome, ohcDB);
-
+        //pModel (purchaseModel) 의 헤더 데이터
         pModel->setHeaderData(0, Qt::Horizontal, tr("PID"));
         pModel->setHeaderData(1, Qt::Horizontal, tr("CID"));
         pModel->setHeaderData(2, Qt::Horizontal, tr("MID"));
-        pModel->setHeaderData(3, Qt::Horizontal, tr("NAME"));
-        pModel->setHeaderData(4, Qt::Horizontal, tr("MNAME"));
-        pModel->setHeaderData(5, Qt::Horizontal, tr("FAVORITE"));
-        pModel->setHeaderData(6, Qt::Horizontal, tr("CATEGORY"));
-        pModel->setHeaderData(7, Qt::Horizontal, tr("PRICE"));
-        pModel->setHeaderData(8, Qt::Horizontal, tr("QUANTITY"));
-        pModel->setHeaderData(9, Qt::Horizontal, tr("BUYAMOUNT"));
-        pModel->setHeaderData(10, Qt::Horizontal, tr("TOTALPRICE"));
-        pModel->setHeaderData(11, Qt::Horizontal, tr("SHOPDATE"));
+        pModel->setHeaderData(3, Qt::Horizontal, tr("BUYAMOUNT"));
+        pModel->setHeaderData(4, Qt::Horizontal, tr("SHOPDATE"));
+
+        //tModel (totalModel) 의 헤더 데이터
+        tModel->setHeaderData(0, Qt::Horizontal, tr("PID"));
+        tModel->setHeaderData(1, Qt::Horizontal, tr("CID"));
+        tModel->setHeaderData(2, Qt::Horizontal, tr("MID"));
+        tModel->setHeaderData(3, Qt::Horizontal, tr("NAME"));
+        tModel->setHeaderData(4, Qt::Horizontal, tr("MNAME"));
+        tModel->setHeaderData(5, Qt::Horizontal, tr("FAVORITE"));
+        tModel->setHeaderData(6, Qt::Horizontal, tr("CATEGORY"));
+        tModel->setHeaderData(7, Qt::Horizontal, tr("PRICE"));
+        tModel->setHeaderData(8, Qt::Horizontal, tr("QUANTITY"));
+        tModel->setHeaderData(9, Qt::Horizontal, tr("BUYAMOUNT"));
+        tModel->setHeaderData(10, Qt::Horizontal, tr("TOTALPRICE"));
+        tModel->setHeaderData(11, Qt::Horizontal, tr("SHOPDATE"));
+
+        //sModel (searchModel) 의 헤더 데이터
+        sModel->setHeaderData(0, Qt::Horizontal, tr("PID"));
+        sModel->setHeaderData(1, Qt::Horizontal, tr("CID"));
+        sModel->setHeaderData(2, Qt::Horizontal, tr("MID"));
+        sModel->setHeaderData(3, Qt::Horizontal, tr("NAME"));
+        sModel->setHeaderData(4, Qt::Horizontal, tr("MNAME"));
+        sModel->setHeaderData(5, Qt::Horizontal, tr("FAVORITE"));
+        sModel->setHeaderData(6, Qt::Horizontal, tr("CATEGORY"));
+        sModel->setHeaderData(7, Qt::Horizontal, tr("PRICE"));
+        sModel->setHeaderData(8, Qt::Horizontal, tr("QUANTITY"));
+        sModel->setHeaderData(9, Qt::Horizontal, tr("BUYAMOUNT"));
+        sModel->setHeaderData(10, Qt::Horizontal, tr("TOTALPRICE"));
+        sModel->setHeaderData(11, Qt::Horizontal, tr("SHOPDATE"));
+
     }
     ui->tableView->setModel(pModel);
     ui->tableView->resizeColumnsToContents();
 
+    ui->totalTableView->setModel(tModel);
+    ui->totalTableView->resizeColumnsToContents();
+
+    ui->searchTableView->setModel(sModel);
+    ui->searchTableView->resizeColumnsToContents();
+
+}
+
+// 구매 데이터 베이스에 회원 및 제품 정보를 불러온다
+void PurchaseManage::dataSave()
+{
+    // QSQLITE 형식의 구매 정보 접속을 설정한다
+    //   QSqlDatabase ohcDB = QSqlDatabase::addDatabase("QSQLITE","purchaseConnection");
+    // ohcDB.setDatabaseName("purchaseDatabase.db");
+
+    //구매 테이블 정보를 tModel에서 표시한다
     for(int i = 0; i < pModel->rowCount(); i++)
     {
-        int Pid = pModel->data(pModel->index(i, 0)).toInt();
-        int Cid = pModel->data(pModel->index(i, 1)).toInt();
-        int Mid = pModel->data(pModel->index(i, 2)).toInt();
-        QString name = pModel->data(pModel->index(i, 3)).toString();
-        QString mname = pModel->data(pModel->index(i, 4)).toString();
-        QString favorite = pModel->data(pModel->index(i, 5)).toString();
-        QString category = pModel->data(pModel->index(i, 6)).toString();
-        int price = pModel->data(pModel->index(i, 7)).toInt();
-        int quantity = pModel->data(pModel->index(i, 8)).toInt();
-        int buyAmount = pModel->data(pModel->index(i, 9)).toInt();
-        int totalPrice = pModel->data(pModel->index(i, 10)).toInt();
-        QString shopDate = pModel->data(pModel->index(i, 11)).toString();
+        // 구매 테이블 정보를 항목별로 저장한다
+        int Pid = pModel->record(i).value("Pid").toInt();
+        int Cid = pModel->record(i).value("Cid").toInt();
+        int Mid = pModel->record(i).value("Mid").toInt();
+        int buyAmount = pModel->record(i).value("buyAmount").toInt();
+        QString shopDate = pModel->record(i).value("shopDate").toString();
 
-        emit addedPurchase(Pid);
+        // pList 에 구매 테이블 정보를 담는다 -> totalTableView 에 활용
+        QStringList pList;
+        pList << QString::number(Pid) << QString::number(Cid) << QString::number(Mid) << QString::number(buyAmount) << shopDate;
+
+        // totalTableView 의 형식이 QStandardItemModel 이므로 형변환 해준다
+        QList<QStandardItem*> pItem;
+        for(int i = 0; i < pList.size(); i++)
+        {
+            pItem << new QStandardItem(pList[i]);
+        }
+
+        // pItem 에 담긴 구매 테이블 정보를 tModel 에 저장한다
+        tModel->appendRow(pItem[0]);
+        tModel->setItem(tR, 1, pItem[1]);
+        tModel->setItem(tR, 2, pItem[2]);
+        tModel->setItem(tR, 9, pItem[3]);
+        tModel->setItem(tR, 11, pItem[4]);
+
+        // 회원 및 제품 정보를 불러올 때 필요한 시그널
+        emit pInfoAddSignPtoC(Cid);
+        emit pInfoAddSignPtoM(Mid);
 
     }
 }
 
+// 구매 등록 버튼 클릭 시
 void PurchaseManage::on_addPushButton_clicked()
 {
+    // 항목 별 자료형 설정
     int Pid = makePid( );
-    int Cid, Mid, price, quantity, buyAmount, totalPrice;
-    QString name, mname, favorite, category, shopDate;
+    int Cid, Mid, buyAmount;
+    QString shopDate;
+
+    // 항목별 ui 에 입력된 내용을 자료형에 따라 저장한다
     ui->PidLineEdit->setText(QString::number(Pid));
-    ui->CidLineEdit->setText(QString::number(Cid));
-    ui->MidLineEdit->setText(QString::number(Mid));
-
-
-    name = ui->nameComboBox->currentText();
-    mname = ui->mnameComboBox->currentText();
-    favorite = ui->favoriteComboBox->currentText();
-    category = ui->categoryComboBox->currentText();
-    price = ui->priceLineEdit->text().toInt();
-    quantity = ui->quantitySpinBox->value();
+    ui->CidLineEdit->text().toInt();
+    ui->MidLineEdit->text().toInt();
     buyAmount = ui->buyAmountSpinBox->value();
-    totalPrice = ui->totalPriceLineEdit->text().toInt();
     shopDate = ui->shopDateEdit->date().toString();
 
-    QSqlDatabase ohcDB = QSqlDatabase::database("purchaseConnection, customerConnection, merchandiseConnection");
+    QSqlQuery pQuery(pModel->database());
+    pQuery.prepare("INSERT INTO purchase VALUES (?, ?, ?, ?, ?)");
+    pQuery.bindValue(0, Pid);
+    pQuery.bindValue(1, Cid);
+    pQuery.bindValue(2, Mid);
+    pQuery.bindValue(3, buyAmount);
+    pQuery.bindValue(4, shopDate);
+    pQuery.exec();
+    pModel->select();
 
-    if(ohcDB.isOpen() && name.length())
+    // pList 에 구매 테이블 정보를 담는다 -> totalTableView 에 활용
+    QStringList pList;
+    pList << QString::number(Pid) << QString::number(Cid) << QString::number(Mid) << QString::number(buyAmount) << shopDate;
+
+    // totalTableView 의 형식이 QStandardItemModel 이므로 형변환 해준다
+    QList<QStandardItem*> pItem;
+    for(int i = 0; i < pList.size(); i++)
     {
-        QSqlQuery pQuery(pModel->database());
-        pQuery.prepare("INSERT INTO purchase VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        pQuery.bindValue(0, Pid);
-        pQuery.bindValue(1, Cid);
-        pQuery.bindValue(2, Mid);
-        pQuery.bindValue(3, name);
-        pQuery.bindValue(4, mname);
-        pQuery.bindValue(5, favorite);
-        pQuery.bindValue(6, category);
-        pQuery.bindValue(7, price);
-        pQuery.bindValue(8, quantity);
-        pQuery.bindValue(9, buyAmount);
-        pQuery.bindValue(10, totalPrice);
-        pQuery.bindValue(11, shopDate);
-
-        pQuery.exec();
-        pModel->select();
-        ui->tableView->resizeColumnsToContents();
-        emit(addedPurchase(Pid));
+        pItem << new QStandardItem(pList[i]);
     }
+
+    // pItem 에 담긴 구매 테이블 정보를 tModel 에 저장한다
+    tModel->appendRow(pItem[0]);
+    tModel->setItem(tR, 1, pItem[1]);
+    tModel->setItem(tR, 2, pItem[2]);
+    tModel->setItem(tR, 9, pItem[3]);
+    tModel->setItem(tR, 11, pItem[4]);
+
+    ui->tableView->resizeColumnsToContents();
+
+    ui->buyAmountSpinBox->clear();
+    ui->shopDateEdit->clear();
+
+    // 구매 정보가 추가되었음을 회원 및 제품 클래스에 전달하는 시그널
+    emit pInfoAddSignPtoC(Pid);
+    emit pInfoAddSignPtoM(Mid);
 }
+
 
 void PurchaseManage::on_modifyPushButton_clicked()
 {
@@ -232,9 +255,6 @@ void PurchaseManage::on_modifyPushButton_clicked()
 
     }
 }
-
-
-
 
 
 void PurchaseManage::on_searchPushButton_clicked()
@@ -308,30 +328,36 @@ void PurchaseManage::showContextMenu(const QPoint &pos)
         menu->exec(globalPos);
 }
 
-void PurchaseManage::acceptPurchaseInfo(int key)     // 응답
+// 회원 정보를 받아와 totalViewTable 에 적용하는 슬롯함수
+void PurchaseManage::pInfoAddReturnSlotPfromC(QList<QString> cInfoList)
 {
-    QModelIndexList indexList =
-            pModel->match(pModel->index(0, 0), Qt::EditRole, key, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
 
-    foreach(auto k, indexList)
+    // 항목별 리스트 저장
+    QString name = cInfoList[0];
+    QString phoneNumber = cInfoList[1];
+    QString address = cInfoList[2];
+    QString favorite = cInfoList[3];
+
+    QStringList cList;
+    cList << name << phoneNumber << address << favorite;
+
+    // 리스트 정보를 테이블에 맞는 자료형으로 변환
+    QList<QStandardItem*> cItem;
+    for(int i = 0; i < cItem.size(); i++)
     {
-        //  int Pid = pModel->data(k.siblingAtColumn(0)).toInt();
-        //  int Cid = pModel->data(k.siblingAtColumn(1)).toInt();
-        //  int Mid = pModel->data(k.siblingAtColumn(2)).toInt();
-        QString name = pModel->data(k.siblingAtColumn(3)).toString();
-        QString mname = pModel->data(k.siblingAtColumn(4)).toString();
-        QString favorite = pModel->data(k.siblingAtColumn(5)).toString();
-        QString category = pModel->data(k.siblingAtColumn(6)).toString();
-        int price = pModel->data(k.siblingAtColumn(7)).toInt();
-        int quantity = pModel->data(k.siblingAtColumn(8)).toInt();
-        int buyAmount = pModel->data(k.siblingAtColumn(9)).toInt();
-        int totalPrice = pModel->data(k.siblingAtColumn(10)).toInt();
-        QString shopDate = pModel->data(k.siblingAtColumn(11)).toString();
-
-        emit sendPurchaseInfo(name, mname, favorite, category, price, quantity, buyAmount, totalPrice, shopDate);
-
+        cItem << new QStandardItem(cList[i]);
     }
+
+    // tModel에 열에 따라 정보 저장
+    tModel->setItem(tr, )
 }
+
+void PurchaseManage::pInfoAddReturnSlotPfromM(QList<QString> mInfoList)
+{
+
+}
+
+
 
 void PurchaseManage::on_tableView_clicked(const QModelIndex &index)
 {
@@ -395,9 +421,9 @@ void PurchaseManage::on_quantitySpinBox_valueChanged(int arg1)
 
 void PurchaseManage::cInfoSlotPfromC(int Cid)
 {
-        //CidList << Cid;
-     qDebug()<<"d";
-        ui->nameComboBox->addItem(QString::number(Cid));
+    //CidList << Cid;
+    qDebug()<<"d";
+    ui->nameComboBox->addItem(QString::number(Cid));
 
 }
 
@@ -409,9 +435,9 @@ void PurchaseManage::addCustomer(int id, QString){
 
 void PurchaseManage::addMerchandise(int Mid)
 {
-       // MidList << Mid;
+    // MidList << Mid;
 
-        ui->mnameComboBox->addItem(QString::number(Mid));
+    ui->mnameComboBox->addItem(QString::number(Mid));
 }
 PurchaseManage::~PurchaseManage()
 {
@@ -436,6 +462,6 @@ void PurchaseManage::acceptCustomerInfo(QString name, QString phoneNumber, QStri
     QList<QStandardItem*> ls;
     ls<<item_name<<item_phone;
     clientInfoModel->setItem(1,1,item_name);
-ui->tableView->update();
+    ui->tableView->update();
 
 }
