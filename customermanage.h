@@ -36,9 +36,14 @@ private slots:
     void on_searchPushButton_clicked();
 //    void acceptCustomerInfo(int);
 
-    // 구매 정보 등록 시 해당되는 고객 정보를 전송하는 슬롯함수
+    // 구매 정보 등록 시 해당되는 회원 정보를 전송하는 슬롯함수
     void pInfoAddSlotCfromP(int);
+    // 구매 정보 검색 시 해당되는 회원 정보를 전송하는 슬롯함수
+    void pInfoSearchSlotCfromP(int);
+    // 구매 정보 수정 시 해당되는 회원 정보를 전송하는 슬롯함수
+    void pInfoModSlotCtoP(int, int);
 
+    // 현재 회원 정보를 ui 입력단에 표시해 주는 슬롯
     void on_tableView_clicked(const QModelIndex &index);
 
 
@@ -69,7 +74,11 @@ signals:
     // 구매 정보 등록 시 해당되는 고객 정보를 리스트로 반환하는 시그널
     void pInfoAddReturnSignCtoP(QList<QString>);
 
+    // 구매 정보 검색 시 해당되는 고객 정보 키값을 반환하는 시그널
+    void pInfoSearchReturnSignCtoP(QList<QString>);
 
+    // 구매 정보 수정 시 해당되는 고객 정보와 열 값을 반환하는 시그널
+    void pInfoModReturnSignCtoP(QList<QString>, int);
 
 private:
     //    QList<Customer *>Customers;

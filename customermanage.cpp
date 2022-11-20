@@ -419,32 +419,69 @@ void CustomerManage::pInfoAddSlotCfromP(int Cid)
 
     emit pInfoAddReturnSignCtoP(cInfoList);
 }
-// purchaseManage 로 부터 회원 정보를 받아오기 위한 슬롯함수
-//void CustomerManage::acceptCustomerInfo(int key)
-//{
-//     검색 시와 마찬가지로, QModelIndexList 에 모델 인덱스 및 키값이 일치하는 정보를 담는다
-//    QModelIndexList indexList =
-//            cModel->match(cModel->index(0, 0), Qt::EditRole, key, -1, Qt::MatchFlags(Qt::MatchCaseSensitive));
 
-//    foreach(auto k, indexList)
-//    {
-//          k 순서대로 회원 정보 모델의 인덱스와 키값이 일치하는 데이터를 항목별 indexList에 저장한다
-//               int Cid = cModel->data(k.siblingAtColumn(0)).toInt();
-//        QString name = cModel->data(k.siblingAtColumn(1)).toString();
-//        QString phoneNumber = cModel->data(k.siblingAtColumn(2)).toString();
-//        QString email = cModel->data(k.siblingAtColumn(3)).toString();
-//        QString domain = cModel->data(k.siblingAtColumn(4)).toString();
-//        QString address = cModel->data(k.siblingAtColumn(5)).toString();
-//        QString favorite = cModel->data(k.siblingAtColumn(6)).toString();
-//        int age = cModel->data(k.siblingAtColumn(7)).toInt();
-//        QString gender = cModel->data(k.siblingAtColumn(8)).toString();
-//        QString joinDate = cModel->data(k.siblingAtColumn(9)).toString();
+// 구매 클래스에서 검색시 해당되는 회원 정보를 전송하는 슬롯함수
+void CustomerManage::pInfoSearchSlotCfromP(int Cid)
+{
+    // 회원 정보 중 구매 클래스에 전송할 항목 선택
+    QList<QString> cInfoList;
+    QSqlQuery cQuery(cModel->database());
+    cQuery.prepare("SELECT name, phoneNumber, address, favorite"
+                   "FROM customer WHERE Cid = ?");
+    cQuery.bindValue(0, Cid);
+    cQuery.exec();
 
-//         항목별 회원 정보를 order 로 보내주는 signal
-//               emit sendCustomerInfo(name, phoneNumber, email, domain, address, favorite, gender, gender);
+    // 항목 별 인덱스를 저장한다
+    QSqlRecord record = cQuery.record();
+    int nameIndex = record.indexOf("name");
+    int phoneNumberIndex = record.indexOf("phoneNumber");
+    int addressIndex = record.indexOf("address");
+    int favoriteIndex = record.indexOf("favorite");
 
-//    }
-//}
+    cQuery.next();
+
+    // 구매 클래스로 전송할 회원 정보를 담는다
+    QString name = cQuery.value(nameIndex).toString();
+    QString phoneNumber = cQuery.value(phoneNumberIndex).toString();
+    QString address = cQuery.value(addressIndex).toString();
+    QString favorite = cQuery.value(favoriteIndex).toString();
+
+    cInfoList << name << phoneNumber << address << favorite;
+
+    emit pInfoSearchReturnSignCtoP(cInfoList);
+}
+
+// 구매 클래스에서 수정시 해당되는 회원 정보를 전송하는 슬롯함수
+void CustomerManage::pInfoModSlotCtoP(int Cid, int r)
+{
+    // 회원 정보 중 구매 클래스에 전송할 항목 선택
+    QList<QString> cInfoList;
+    QSqlQuery cQuery(cModel->database());
+    cQuery.prepare("SELECT name, phoneNumber, address, favorite"
+                   "FROM customer WHERE Cid = ?");
+    cQuery.bindValue(0, Cid);
+    cQuery.exec();
+
+    // 항목 별 인덱스를 저장한다
+    QSqlRecord record = cQuery.record();
+    int nameIndex = record.indexOf("name");
+    int phoneNumberIndex = record.indexOf("phoneNumber");
+    int addressIndex = record.indexOf("address");
+    int favoriteIndex = record.indexOf("favorite");
+
+    cQuery.next();
+
+    // 구매 클래스로 전송할 회원 정보를 담는다
+    QString name = cQuery.value(nameIndex).toString();
+    QString phoneNumber = cQuery.value(phoneNumberIndex).toString();
+    QString address = cQuery.value(addressIndex).toString();
+    QString favorite = cQuery.value(favoriteIndex).toString();
+
+    cInfoList << name << phoneNumber << address << favorite;
+
+    emit pInfoModReturnSignCtoP(cInfoList, r);
+
+}
 
 // 현재 회원 정보를 ui 입력단에 표시해 주는 슬롯
 void CustomerManage::on_tableView_clicked(const QModelIndex &index)
@@ -470,7 +507,7 @@ void CustomerManage::on_tableView_clicked(const QModelIndex &index)
     ui->emailLineEdit->setText(email);
     ui->domainComboBox->setCurrentText(domain);
     ui->addressLineEdit->setText(address);
-    ui->favoriteComboBox->setCurrentText(domain);
+    ui->favoriteComboBox->setCurrentText(favorite);
     ui->ageSpinBox->setValue(age);
     ui->maleButton->setText(gender);
     ui->femaleButton->setText(gender);
