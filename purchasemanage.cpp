@@ -36,7 +36,7 @@ PurchaseManage::PurchaseManage(QWidget *parent)
 
     if(ohcDB.open())
     {
-        QSqlQuery pQuery(pModel->database());
+        QSqlQuery pQuery(ohcDB);
         pQuery.exec("CREATE TABLE IF NOT EXISTS purchase"
                     "(Pid INTEGER PRIMARY KEY, "
                     "Cid INTEGER PRIMARY KEY, "
