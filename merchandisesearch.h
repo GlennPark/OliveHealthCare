@@ -1,28 +1,28 @@
-#ifndef MERCHANDISESEARCH_H
-#define MERCHANDISESEARCH_H
+//#ifndef MERCHANDISESEARCH_H
+//#define MERCHANDISESEARCH_H
 
-#include <QWidget>
+//#include <QWidget>
 
-class QStandardItemModel;
+//class QStandardItemModel;
 
-namespace Ui {
-class MerchandiseSearch;
-}
+//namespace Ui {
+//class MerchandiseSearch;
+//}
 
-class MerchandiseSearch : public QWidget
-{
-    Q_OBJECT
+//class MerchandiseSearch : public QWidget
+//{
+//    Q_OBJECT
 
-public:
-    explicit MerchandiseSearch(QWidget *parent = nullptr);
-    ~MerchandiseSearch();
+//public:
+//    explicit MerchandiseSearch(QWidget *parent = nullptr);
+//    ~MerchandiseSearch();
 
-private slots:
+//private slots:
 
-private:
+//private:
 
-    Ui::MerchandiseSearch *ui;
+//    Ui::MerchandiseSearch *ui;
 
-};
+//};
 
-#endif // MERCHANDISESEARCH_H
+//#endif // MERCHANDISESEARCH_H

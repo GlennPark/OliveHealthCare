@@ -26,8 +26,8 @@ PurchaseManage::PurchaseManage(QWidget *parent)
     menu->addAction(removeAction);
 
     // totalTableView 에서 마우스 오른쪽클릭 시 보조메뉴 등장
-    ui->totalTableView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->totalTableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(showContextMenu(QPoint)));
+    ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
     connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(on_searchPushButton_clicked()));
 
     //QSQLITE 형식의 구매 정보 접속을 설정한다
@@ -47,8 +47,8 @@ PurchaseManage::PurchaseManage(QWidget *parent)
         pModel = new QSqlTableModel(this, ohcDB);
         pModel->setTable("purchase");
 
-        tModel = new QStandardItemModel(0, 12);
-        sModel = new QStandardItemModel(0, 12);
+        tModel = new QStandardItemModel(0, 13);
+        sModel = new QStandardItemModel(0, 13);
 
         pModel->select();
 
@@ -140,6 +140,8 @@ void PurchaseManage::dataSave()
         // 회원 및 제품 정보를 불러올 때 필요한 시그널
         emit pInfoAddSignPtoC(Cid);
         emit pInfoAddSignPtoM(Mid);
+
+
 
     }
 }
@@ -266,29 +268,32 @@ void PurchaseManage::on_searchPushButton_clicked()
     int i = ui->searchComboBox->currentIndex();
     auto flag = (i)? Qt::MatchCaseSensitive|Qt::MatchContains
                    : Qt::MatchCaseSensitive;
-    QModelIndexList indexes = pModel->match(pModel->index(0, i), Qt::EditRole, ui->searchLineEdit->text(), -1, Qt::MatchFlags(flag));
+    QModelIndexList indexes = sModel->match(sModel->index(0, i), Qt::EditRole, ui->searchLineEdit->text(), -1, Qt::MatchFlags(flag));
+
+ //   int Pid = ui->PidLineEdit->text().toInt();
 
     foreach(auto k, indexes)
     {
-        int Pid = pModel->data(k.siblingAtColumn(0)).toInt();
-        int Cid = pModel->data(k.siblingAtColumn(1)).toInt();
-        int Mid = pModel->data(k.siblingAtColumn(2)).toInt();
-        QString name = pModel->data(k.siblingAtColumn(3)).toString();
-        QString mname = pModel->data(k.siblingAtColumn(4)).toString();
-        QString favorite = pModel->data(k.siblingAtColumn(5)).toString();
-        QString category = pModel->data(k.siblingAtColumn(6)).toString();
-        int price = pModel->data(k.siblingAtColumn(7)).toInt();
-        int quantity = pModel->data(k.siblingAtColumn(8)).toInt();
-        int buyAmount = pModel->data(k.siblingAtColumn(9)).toInt();
-        int totalPrice = pModel->data(k.siblingAtColumn(10)).toInt();
-        QString shopDate = pModel->data(k.siblingAtColumn(11)).toString();
+        int Pid = sModel->data(k.siblingAtColumn(0)).toInt();
+        int Cid = sModel->data(k.siblingAtColumn(1)).toInt();
+        int Mid = sModel->data(k.siblingAtColumn(2)).toInt();
+        QString name = sModel->data(k.siblingAtColumn(3)).toString();
+        QString mname = sModel->data(k.siblingAtColumn(4)).toString();
+        QString address = sModel->data(k.siblingAtColumn(5)).toString();
+        QString favorite = sModel->data(k.siblingAtColumn(6)).toString();
+        QString category = sModel->data(k.siblingAtColumn(7)).toString();
+        int price = sModel->data(k.siblingAtColumn(8)).toInt();
+        int quantity = sModel->data(k.siblingAtColumn(9)).toInt();
+        int buyAmount = sModel->data(k.siblingAtColumn(10)).toInt();
+        int totalPrice = sModel->data(k.siblingAtColumn(11)).toInt();
+        QString shopDate = sModel->data(k.siblingAtColumn(12)).toString();
+        QString phoneNumber = sModel->data(k.siblingAtColumn(13)).toString();
 
         QStringList stringList;
-
-        stringList << QString::number(Pid) << QString::number(Cid) << QString::number(Mid) << name << mname << favorite << category << QString::number(price) << QString::number(quantity) << QString::number(buyAmount) << QString::number(totalPrice) << shopDate ;
+        stringList << QString::number(Pid) << QString::number(Cid) << QString::number(Mid) << name << mname << favorite << category << QString::number(price) << QString::number(quantity) << QString::number(buyAmount) << QString::number(totalPrice) << shopDate << phoneNumber;
 
         QList<QStandardItem *> items;
-        for (int i = 0; i < 12; ++i) {
+        for (int i = 0; i < 13; ++i) {
             items.append(new QStandardItem(stringList.at(i)));
         }
 
@@ -307,6 +312,7 @@ int PurchaseManage::makePid( )
     }
 }
 
+// 우클릭 시 보조메뉴를 사용해 데이터 삭제
 void PurchaseManage::removeItem()
 {
     QModelIndex modelIndex = ui->tableView->currentIndex();
@@ -318,12 +324,14 @@ void PurchaseManage::removeItem()
     }
 }
 
+// 우클릭 시 포인터 위치 지정
 void PurchaseManage::on_tableView_customContextMenuRequested(const QPoint &pos)
 {
     QPoint globalPos = ui->tableView->mapToGlobal(pos);
     menu->exec(globalPos);
 }
 
+// 지정된 포인터 위치에 맞는 보조 메뉴 열기
 void PurchaseManage::showContextMenu(const QPoint &pos)
 {
     QPoint globalPos = ui->tableView->mapToGlobal(pos);
@@ -351,7 +359,7 @@ void PurchaseManage::pInfoAddReturnSlotPfromC(QList<QString> cInfoList)
         cItem << new QStandardItem(cList[i]);
     }
 
-    // tModel에 열에 따라 정보 저장
+    // tModel에 열에 따라 리스트 정보 저장
     tModel->setItem(tR, 3, cItem[0]);
     tModel->setItem(tR, 13, cItem[1]);
     tModel->setItem(tR, 5, cItem[2]);
@@ -377,7 +385,7 @@ void PurchaseManage::pInfoAddReturnSlotPfromM(QList<QString> mInfoList)
         mItem << new QStandardItem(mList[i]);
     }
 
-    //
+    // tModel에 열에 따라 리스트 정보를 저장
     tModel->setItem(tR, 4, mItem[0]);
     tModel->setItem(tR, 8, mItem[1]);
     tModel->setItem(tR, 9, mItem[2]);
@@ -385,41 +393,46 @@ void PurchaseManage::pInfoAddReturnSlotPfromM(QList<QString> mInfoList)
 }
 
 
-
-void PurchaseManage::on_tableView_clicked(const QModelIndex &index)
+// 현재 구매 정보를 ui 입력단에 표시해 주는 슬롯함수
+void PurchaseManage::on_tableView_clicked(const QModelIndex &k)
 {
-    QString Pid = pModel->data(index.siblingAtColumn(0)).toString();
-    QString Cid = pModel->data(index.siblingAtColumn(1)).toString();
-    QString Mid = pModel->data(index.siblingAtColumn(2)).toString();
-    QString name = pModel->data(index.siblingAtColumn(3)).toString();
-    QString mname = pModel->data(index.siblingAtColumn(4)).toString();
-    QString favorite = pModel->data(index.siblingAtColumn(5)).toString();
-    QString category = pModel->data(index.siblingAtColumn(6)).toString();
-    QString price = pModel->data(index.siblingAtColumn(7)).toString();
-    int quantity = pModel->data(index.siblingAtColumn(8)).toInt();
-    int buyAmount = pModel->data(index.siblingAtColumn(9)).toInt();
-    QString totalPrice = pModel->data(index.siblingAtColumn(10)).toString();
-    QDate shopDate = pModel->data(index.siblingAtColumn(11)).toDate();
+    // 항목별 데이터를 자료형에 따라 인덱스로 보낸다
+    int Pid = sModel->data(k.siblingAtColumn(0)).toInt();
+    int Cid = sModel->data(k.siblingAtColumn(1)).toInt();
+    int Mid = sModel->data(k.siblingAtColumn(2)).toInt();
+    QString name = sModel->data(k.siblingAtColumn(3)).toString();
+    QString mname = sModel->data(k.siblingAtColumn(4)).toString();
+    QString address = sModel->data(k.siblingAtColumn(5)).toString();
+    QString favorite = sModel->data(k.siblingAtColumn(6)).toString();
+    QString category = sModel->data(k.siblingAtColumn(7)).toString();
+    int price = sModel->data(k.siblingAtColumn(8)).toInt();
+    int quantity = sModel->data(k.siblingAtColumn(9)).toInt();
+    int buyAmount = sModel->data(k.siblingAtColumn(10)).toInt();
+    int totalPrice = sModel->data(k.siblingAtColumn(11)).toInt();
+    QDate shopDate = sModel->data(k.siblingAtColumn(12)).toDate();
+    QString phoneNumber = sModel->data(k.siblingAtColumn(13)).toString();
 
-    ui->PidLineEdit->setText(Pid);
-    ui->CidLineEdit->setText(Cid);
-    ui->MidLineEdit->setText(Mid);
+    // 각 ui 에 입력된 정보를 항목별로 저장한다
+    ui->PidLineEdit->setText(QString::number(Pid));
+    ui->CidLineEdit->setText(QString::number(Cid));
+    ui->MidLineEdit->setText(QString::number(Mid));
     ui->nameComboBox->setCurrentText(name);
     ui->mnameComboBox->setCurrentText(mname);
+    ui->addressLineEdit->setText(address);
     ui->favoriteComboBox->setCurrentText(favorite);
     ui->categoryComboBox->setCurrentText(category);
-    ui->priceLineEdit->setText(price);
+    ui->priceLineEdit->setText(QString::number(price));
     ui->quantitySpinBox->setValue(quantity);
     ui->buyAmountSpinBox->setValue(buyAmount);
-    ui->totalPriceLineEdit->setText(totalPrice);
+    ui->totalPriceLineEdit->setText(QString::number(totalPrice));
     ui->shopDateEdit->setDate(shopDate);
-
-
+    ui->phoneNumberLineEdit->setText(phoneNumber);
 }
+
 void PurchaseManage::on_nameComboBox_currentIndexChanged(int index)
 {
     qDebug()<<"1104";
-    emit getCustomerInfo(index);
+
 }
 
 void PurchaseManage::on_mnameComboBox_currentIndexChanged(int index)
@@ -438,7 +451,61 @@ void PurchaseManage::on_mnameComboBox_currentIndexChanged(int index)
 //}
 
 
+//void PurchaseManage::pInfoSearchSignPtoC(int)
+//{
 
+//}
+
+//void PurchaseManage::pInfoSearchSignPtoM(int)
+//{
+
+//}
+
+void PurchaseManage::cInfoAddSlotPfromC(int)
+{
+
+}
+void PurchaseManage::mInfoAddSlotPfromM(int)
+{
+
+}
+
+void PurchaseManage::cInfoDelSlotPfromC(int)
+{
+
+}
+void PurchaseManage::mInfoDelSlotPfromM(int)
+{
+
+}
+
+void PurchaseManage::cInfoModSlotPfromC(int, QList<QString>)
+{
+
+}
+
+void PurchaseManage::mInfoModSlotPfromM(int, QList<QString>)
+{
+
+}
+
+void PurchaseManage::pInfoModReturnSlotPfromC(QList<QString>, int)
+{
+
+}
+void PurchaseManage::pInfoModReturnSlotPfromM(QList<QString>, int)
+{
+
+}
+
+void PurchaseManage::pInfoSearchReturnSlotPfromC(QList<QString>)
+{
+
+}
+void PurchaseManage::pInfoSearchReturnSlotPfromM(QList<QString>)
+{
+
+}
 
 void PurchaseManage::on_quantitySpinBox_valueChanged(int arg1)
 {
@@ -446,26 +513,42 @@ void PurchaseManage::on_quantitySpinBox_valueChanged(int arg1)
 }
 
 
-void PurchaseManage::cInfoSlotPfromC(int Cid)
-{
-    //CidList << Cid;
-    qDebug()<<"d";
-    ui->nameComboBox->addItem(QString::number(Cid));
+//void PurchaseManage::cInfoSlotPfromC(int Cid)
+//{
+//    //CidList << Cid;
+//    qDebug()<<"d";
+//    ui->nameComboBox->addItem(QString::number(Cid));
 
-}
+//}
 
-void PurchaseManage::addCustomer(int id, QString){
+//void PurchaseManage::addCustomer(int id, QString){
 
-    ui->nameComboBox->addItem(QString::number(id));
+//    ui->nameComboBox->addItem(QString::number(id));
 
-}
+//}
 
-void PurchaseManage::addMerchandise(int Mid)
-{
-    // MidList << Mid;
+//void PurchaseManage::addMerchandise(int Mid)
+//{
+//    // MidList << Mid;
 
-    ui->mnameComboBox->addItem(QString::number(Mid));
-}
+//    ui->mnameComboBox->addItem(QString::number(Mid));
+//}
+//void PurchaseManage::acceptCustomerInfo(QString name, QString phoneNumber, QString, QString, QString, QString, QString, QString){
+//    qDebug()<<"accept";
+//    QStandardItem* item_name = new QStandardItem;
+//    item_name->setText(name);
+
+//    QStandardItem* item_phone = new QStandardItem;
+//    item_phone->setText(phoneNumber);
+
+//    QList<QStandardItem*> ls;
+//    ls<<item_name<<item_phone;
+//    clientInfoModel->setItem(1,1,item_name);
+//    ui->tableView->update();
+
+//}
+
+
 PurchaseManage::~PurchaseManage()
 {
     delete ui;
@@ -478,17 +561,4 @@ PurchaseManage::~PurchaseManage()
         database.close();
     }
 }
-void PurchaseManage::acceptCustomerInfo(QString name, QString phoneNumber, QString, QString, QString, QString, QString, QString){
-    qDebug()<<"accept";
-    QStandardItem* item_name = new QStandardItem;
-    item_name->setText(name);
 
-    QStandardItem* item_phone = new QStandardItem;
-    item_phone->setText(phoneNumber);
-
-    QList<QStandardItem*> ls;
-    ls<<item_name<<item_phone;
-    clientInfoModel->setItem(1,1,item_name);
-    ui->tableView->update();
-
-}

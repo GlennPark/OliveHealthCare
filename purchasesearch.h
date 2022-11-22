@@ -1,26 +1,26 @@
-#ifndef PURCHASESEARCH_H
-#define PURCHASESEARCH_H
+//#ifndef PURCHASESEARCH_H
+//#define PURCHASESEARCH_H
 
-#include <QWidget>
+//#include <QWidget>
 
-namespace Ui {
-class PurchaseSearch;
-}
+//namespace Ui {
+//class PurchaseSearch;
+//}
 
-class PurchaseSearch : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit PurchaseSearch(QWidget *parent = nullptr);
-    ~PurchaseSearch();
-
-
-private slots:
+//class PurchaseSearch : public QWidget
+//{
+//    Q_OBJECT
+//public:
+//    explicit PurchaseSearch(QWidget *parent = nullptr);
+//    ~PurchaseSearch();
 
 
-private:
+//private slots:
 
-    Ui::PurchaseSearch *ui;
-};
 
-#endif // PURCHASESEARCH_H
+//private:
+
+//    Ui::PurchaseSearch *ui;
+//};
+
+//#endif // PURCHASESEARCH_H

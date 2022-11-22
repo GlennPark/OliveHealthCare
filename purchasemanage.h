@@ -63,7 +63,7 @@ private slots:
     void on_nameComboBox_currentIndexChanged(int index);
     void on_mnameComboBox_currentIndexChanged(int index);
  //   void on_merchandiseComboBox_currentIndexChanged(int index);
-    void on_priceSpinBoy_valueChanged(int arg1);
+ //   void on_priceSpinBoy_valueChanged(int arg1);
     void on_quantitySpinBox_valueChanged(int arg2);
  //   void on_treeWidget_customContextMenuRequested(const QPoint &pos);
 

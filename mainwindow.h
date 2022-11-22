@@ -32,11 +32,8 @@ private slots:
     void on_actionPurchase_triggered();
     void on_actionChatting_triggered();
    void on_customerChatAction_triggered();
-    void on_customerSearchAction_triggered();
-
-
-
-    void on_merchandiseSearchAction_triggered();
+//    void on_customerSearchAction_triggered();
+//    void on_merchandiseSearchAction_triggered();
 
 private:
     Ui::MainWindow *ui;
